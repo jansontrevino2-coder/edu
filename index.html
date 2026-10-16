@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>UniversalGMS Launcher</title>
 
 <style>
+
 *{
     margin:0;
     padding:0;
@@ -14,6 +16,7 @@
 
 body{
     height:100vh;
+
     display:flex;
     justify-content:center;
     align-items:center;
@@ -21,16 +24,20 @@ body{
     font-family:Arial,sans-serif;
 
     background:
-        radial-gradient(circle at center,
-        rgba(139,92,246,.35),
-        transparent 40%),
+        radial-gradient(
+            circle at center,
+            rgba(139,92,246,.35),
+            transparent 40%
+        ),
         #0f0f1a;
 
     color:white;
 }
 
 .launcher{
-    width:450px;
+
+    width:500px;
+
     text-align:center;
 
     padding:40px;
@@ -43,36 +50,72 @@ body{
 
     border:1px solid rgba(255,255,255,.1);
 
-    box-shadow:0 0 40px rgba(139,92,246,.3);
+    box-shadow:
+        0 0 40px rgba(139,92,246,.3);
 }
 
 .logo{
     font-size:5rem;
+    margin-bottom:10px;
 }
 
 .title{
+
     font-size:3rem;
     font-weight:900;
-    margin-top:10px;
 
     background:
         linear-gradient(
             135deg,
-            #fff,
-            #c4b5fd,
+            #ffffff,
+            #d8b4fe,
             #8b5cf6
         );
 
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
+
+    margin-bottom:10px;
 }
 
 .subtitle{
-    color:#aaa;
-    margin:20px 0;
+    color:#a1a1aa;
+    margin-bottom:25px;
 }
 
 .launch-btn{
+
+    width:100%;
+
+    border:none;
+
+    padding:16px;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    color:white;
+
+    font-size:1rem;
+    font-weight:bold;
+
+    margin-bottom:12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8b5cf6,
+            #6d28d9
+        );
+}
+
+.launch-btn:hover{
+    filter:brightness(1.1);
+}
+
+.download-btn{
+
     width:100%;
 
     border:none;
@@ -91,21 +134,33 @@ body{
     background:
         linear-gradient(
             135deg,
-            #8b5cf6,
-            #6d28d9
+            #4f46e5,
+            #312e81
         );
 }
 
-.launch-btn:hover{
+.download-btn:hover{
     filter:brightness(1.1);
 }
+
+.footer{
+
+    margin-top:20px;
+
+    color:#71717a;
+
+    font-size:.9rem;
+}
+
 </style>
 </head>
 <body>
 
 <div class="launcher">
 
-    <div class="logo">🎮</div>
+    <div class="logo">
+        🎮
+    </div>
 
     <div class="title">
         UniversalGMS
@@ -123,6 +178,18 @@ body{
 
     </button>
 
+    <button
+        class="download-btn"
+        onclick="downloadHub()">
+
+        ⬇ Download Hub
+
+    </button>
+
+    <div class="footer">
+        UniversalGMS Launcher
+    </div>
+
 </div>
 
 <script>
@@ -133,6 +200,24 @@ function launchHub(){
         "/hub.html",
         "_blank"
     );
+
+}
+
+function downloadHub(){
+
+    const link =
+        document.createElement("a");
+
+    link.href = "/hub.html";
+
+    link.download =
+        "UniversalGMS-Hub.html";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
 
 }
 
