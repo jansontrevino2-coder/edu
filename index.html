@@ -2,102 +2,191 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Game Database</title>
 
 <style>
-body{
+:root{
+    --bg:#121212;
+    --card:#1e1e1e;
+    --accent:#fc6d26;
+    --text:#ffffff;
+}
+
+*{
     margin:0;
-    padding:20px;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
     font-family:Arial,sans-serif;
-    background:#121212;
-    color:white;
+    padding:20px;
+}
+
+header{
+    text-align:center;
+    margin-bottom:30px;
 }
 
 h1{
-    text-align:center;
-    color:#fc6d26;
+    color:var(--accent);
+    margin-bottom:10px;
+}
+
+#status{
+    color:#aaa;
 }
 
 #game-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
     gap:20px;
     max-width:1400px;
     margin:auto;
 }
 
 .game-card{
-    background:#1e1e1e;
+    background:var(--card);
     border-radius:12px;
     overflow:hidden;
+    transition:.2s;
+    box-shadow:0 4px 12px rgba(0,0,0,.3);
+}
+
+.game-card:hover{
+    transform:translateY(-5px);
 }
 
 .game-cover{
     width:100%;
     height:160px;
     object-fit:cover;
+    background:#333;
 }
 
 .game-info{
     padding:15px;
 }
 
+.game-title{
+    font-size:16px;
+    font-weight:bold;
+    margin-bottom:12px;
+}
+
 .play-btn{
     width:100%;
+    padding:10px;
     border:none;
-    background:#fc6d26;
-    color:white;
-    padding:12px;
     border-radius:8px;
+    background:var(--accent);
+    color:white;
     cursor:pointer;
     font-weight:bold;
+}
+
+.play-btn:hover{
+    opacity:.9;
 }
 </style>
 </head>
 <body>
 
-<h1>🎮 Game Database</h1>
+<header>
+    <h1>🎮 Game Database</h1>
+    <div id="status">Scanning games...</div>
+</header>
 
 <div id="game-grid"></div>
 
 <script>
 
-async function loadGames(){
+async function loadGames() {
 
-    const response = await fetch("/api/games");
-    const games = await response.json();
+    const status =
+        document.getElementById("status");
 
-    const grid = document.getElementById("game-grid");
+    try {
 
-    games.forEach(game=>{
+        const response =
+            await fetch("/api/games");
 
-        const card = document.createElement("div");
+        if (!response.ok) {
+            throw new Error(
+                "Failed to load /api/games"
+            );
+        }
 
-        card.className = "game-card";
+        const games =
+            await response.json();
+
+        renderGames(games);
+
+        status.textContent =
+            `${games.length} games found`;
+
+    } catch (err) {
+
+        console.error(err);
+
+        status.textContent =
+            "Failed to scan games";
+    }
+}
+
+function renderGames(games) {
+
+    const grid =
+        document.getElementById("game-grid");
+
+    grid.innerHTML = "";
+
+    if (!games.length) {
+
+        grid.innerHTML =
+            "<p>No games found.</p>";
+
+        return;
+    }
+
+    games.forEach(game => {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "game-card";
 
         card.innerHTML = `
             <img
                 class="game-cover"
                 src="${game.cover}"
                 alt="${game.name}"
+                onerror="this.src='https://via.placeholder.com/400x250?text=No+Cover'"
             >
 
             <div class="game-info">
-                <h3>${game.name}</h3>
+                <div class="game-title">
+                    ${game.name}
+                </div>
 
                 <button
                     class="play-btn"
-                    onclick="window.location.href='${game.url}'">
+                    onclick="playGame('${game.url}')">
                     ▶ Play
                 </button>
             </div>
         `;
 
         grid.appendChild(card);
-
     });
+}
 
+function playGame(url) {
+    window.location.href = url;
 }
 
 loadGames();
