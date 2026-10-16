@@ -3,11 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Game Database</title>
 
 <style>
-
 :root{
     --bg:#121212;
     --card:#1e1e1e;
@@ -17,175 +15,174 @@
 
 *{
     margin:0;
-    padding:0;*    box-sizing:border-box;
+    padding:0;
+    box-sizing:border-box;
 }
 
-body*
+body{
     background:var(--bg);
-    col*r:var(--text);
-    font-family:Ari*l,sans-serif;
+    color:var(--text);
+    font-family:Arial, sans-serif;
     padding:20px;
 }
-*header{
+
+header{
     text-align:center;
-   *margin-bottom:30px;
+    margin-bottom:30px;
 }
 
 h1{
-    col*r:var(--accent);
-    margin-bottom*10px;
+    color:var(--accent);
+    margin-bottom:10px;
 }
 
 #status{
     color:#aaa;
-*
+}
 
 #game-grid{
-    max-width:1400px*
+    max-width:1400px;
     margin:auto;
 
-    display:gri*;
-    grid-template-columns:repeat*auto-fill,minmax(250px,1fr));
-    *ap:20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    gap:20px;
 }
 
 .game-card{
-    backgr*und:var(--card);
-    border-radius*12px;
+    background:var(--card);
+    border-radius:12px;
     overflow:hidden;
-    box*shadow:0 4px 16px rgba(0,0,0,.3);
-*   transition:.2s;
+    box-shadow:0 4px 16px rgba(0,0,0,.3);
+    transition:0.2s;
 }
 
-.game-card:h*ver{
-    transform:translateY(-6px*;
+.game-card:hover{
+    transform:translateY(-5px);
 }
 
 .game-cover{
     width:100%;
-*   height:160px;
-    object-fit:co*er;
+    height:160px;
+    object-fit:cover;
     background:#333;
 }
 
-.game-*nfo{
+.game-info{
     padding:15px;
 }
 
-.game-ti*le{
+.game-title{
+    font-size:18px;
     font-weight:bold;
-    marg*n-bottom:12px;
+    margin-bottom:10px;
 }
 
 .play-btn{
-    w*dth:100%;
+    width:100%;
     border:none;
-    bac*ground:var(--accent);
-    color:wh*te;
+    background:var(--accent);
+    color:white;
     padding:10px;
-    border-r*dius:8px;
+    border-radius:8px;
     cursor:pointer;
-    *ont-weight:bold;
+    font-weight:bold;
 }
 
-.play-btn:hove*{
-    opacity:.9;
+.play-btn:hover{
+    opacity:0.9;
 }
-
 </style>
-</he*d>
+</head>
 <body>
 
 <header>
-    <h1>🎮 Gam* Database</h1>
-    <div id="status*>Scanning games...</div>
-</header>*
+    <h1>🎮 Game Database</h1>
+    <div id="status">Scanning games...</div>
+</header>
+
 <div id="game-grid"></div>
 
-<scri*t>
+<script>
+async function loadGames() {
 
-async function loadGames(){
+    const status =
+        document.getElementById("status");
 
- *  const status =
-        document.*etElementById("status");
+    try {
 
-    try{*
         const response =
-        *   await fetch("/api/games");
+            await fetch("/api/games");
 
-   *    if(!response.ok){
-            *hrow new Error("API Error");
-     *  }
+        if (!response.ok) {
+            throw new Error("API Error");
+        }
 
         const games =
-       *    await response.json();
+            await response.json();
 
-      * status.textContent =
-            *${games.length} games found`;
+        status.textContent =
+            `${games.length} games found`;
 
-   *    renderGames(games);
+        renderGames(games);
 
-    }
-   *catch(error){
+    } catch (error) {
 
-        console.err*r(error);
+        console.error(error);
 
-        status.textCont*nt =
-            "Failed to load g*mes";
+        status.textContent =
+            "Failed to load games";
     }
 }
 
-function renderGame*(games){
+function renderGames(games) {
 
     const grid =
-       *document.getElementById("game-grid*);
+        document.getElementById("game-grid");
 
     grid.innerHTML = "";
 
-    *ames.forEach(game=>{
+    games.forEach(game => {
 
-        cons* card =
-            document.creat*Element("div");
+        const card =
+            document.createElement("div");
 
-        card.clas*Name =
+        card.className =
             "game-card";
 
- *      card.innerHTML = `
-         *  <img
-                class="game*cover"
-                src="${game*cover}"
-                alt="${gam*.name}"
-                onerror="t*is.src='https://via.placeholder.co*/400x250?text=No+Cover'"
-         *  >
+        card.innerHTML = `
+            <img
+                class="game-cover"
+                src="${game.cover}"
+                alt="${game.name}"
+                onerror="this.src='https://via.placeholder.com/400x250?text=No+Cover'"
+            >
 
-            <div class="game-*nfo">
+            <div class="game-info">
 
-                <div class=*game-title">
-                    $*game.name}
+                <div class="game-title">
+                    ${game.name}
                 </div>
-*                <button
-          *         class="play-btn"
-        *           onclick="playGame('${ga*e.url}')">
-                    ▶ P*ay
+
+                <button
+                    class="play-btn"
+                    onclick="playGame('${game.url}')">
+                    ▶ Play
                 </button>
 
-    *       </div>
+            </div>
         `;
 
-        *rid.appendChild(card);
+        grid.appendChild(card);
 
     });
-
 }
 
-function playGame(url){
-
+function playGame(url) {
     window.location.href = url;
-
 }
 
 loadGames();
-
 </script>
 
 </body>
