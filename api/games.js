@@ -1,33 +1,40 @@
 import fs from "fs";
 import path from "path";
 
-export default function handler(req, res) {
-    const gamesDir = path.join(process.cwd(), "public", "Games");
+export default async function handler(req, res) {
+
+    const gamesDir = path.join(process.cwd(), "Games");
 
     const folders = fs.readdirSync(gamesDir);
 
-    const games = folders.map(folder => {
+    const games = [];
+
+    for (const folder of folders) {
 
         const folderPath = path.join(gamesDir, folder);
 
+        if (!fs.statSync(folderPath).isDirectory()) continue;
+
         const files = fs.readdirSync(folderPath);
 
-        const htmlFile =
-            files.find(f => f.toLowerCase().endsWith(".html"));
+        const htmlFile = files.find(file =>
+            file.toLowerCase().endsWith(".html")
+        );
 
-        const coverFile =
-            files.find(f =>
-                /\.(png|jpg|jpeg|webp|gif)$/i.test(f)
-            );
+        const coverFile = files.find(file =>
+            /\.(png|jpg|jpeg|webp|gif)$/i.test(file)
+        );
 
-        return {
+        if (!htmlFile) continue;
+
+        games.push({
             name: folder,
-            url: `/Games/${folder}/${htmlFile}`,
+            url: `/Games/${encodeURIComponent(folder)}/${encodeURIComponent(htmlFile)}`,
             cover: coverFile
-                ? `/Games/${folder}/${coverFile}`
-                : null
-        };
-    });
+                ? `/Games/${encodeURIComponent(folder)}/${encodeURIComponent(coverFile)}`
+                : "https://via.placeholder.com/400x250?text=No+Cover"
+        });
+    }
 
     res.status(200).json(games);
 }
