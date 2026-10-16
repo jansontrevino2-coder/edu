@@ -8,10 +8,10 @@
 <style>
 body{
     margin:0;
+    padding:20px;
     font-family:Arial,sans-serif;
     background:#121212;
     color:white;
-    padding:20px;
 }
 
 h1{
@@ -21,7 +21,7 @@ h1{
 
 #game-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
     gap:20px;
     max-width:1400px;
     margin:auto;
@@ -29,7 +29,7 @@ h1{
 
 .game-card{
     background:#1e1e1e;
-    border-radius:10px;
+    border-radius:12px;
     overflow:hidden;
 }
 
@@ -45,11 +45,11 @@ h1{
 
 .play-btn{
     width:100%;
-    padding:10px;
     border:none;
-    border-radius:6px;
     background:#fc6d26;
     color:white;
+    padding:12px;
+    border-radius:8px;
     cursor:pointer;
     font-weight:bold;
 }
@@ -65,12 +65,12 @@ h1{
 
 async function loadGames(){
 
-    const response = await fetch("/games.json");
+    const response = await fetch("/api/games");
     const games = await response.json();
 
     const grid = document.getElementById("game-grid");
 
-    games.forEach(game => {
+    games.forEach(game=>{
 
         const card = document.createElement("div");
 
@@ -78,8 +78,8 @@ async function loadGames(){
 
         card.innerHTML = `
             <img
-                src="${game.cover}"
                 class="game-cover"
+                src="${game.cover}"
                 alt="${game.name}"
             >
 
@@ -95,7 +95,9 @@ async function loadGames(){
         `;
 
         grid.appendChild(card);
+
     });
+
 }
 
 loadGames();
