@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>UniversalGMS</title>
 
 <style>
@@ -12,8 +11,8 @@
     --card:#1f1f33;
     --accent:#8b5cf6;
     --accent2:#6d28d9;
-    --text:#ffffff;
-    --muted:#a1a1aa;
+    --text:#fff;
+    --muted:#aaa;
 }
 
 *{
@@ -23,18 +22,15 @@
 }
 
 body{
-    min-height:100vh;
-    font-family:Inter,Arial,sans-serif;
-    color:var(--text);
-
+    font-family:Arial,sans-serif;
     background:
-    radial-gradient(
-        circle at top,
+        radial-gradient(circle at top,
         rgba(139,92,246,.25),
-        transparent 35%
-    ),
-    var(--bg);
+        transparent 40%),
+        var(--bg);
 
+    color:white;
+    min-height:100vh;
     padding:20px;
 }
 
@@ -44,21 +40,20 @@ header{
 }
 
 .logo{
-    font-size:3.5rem;
+    font-size:3rem;
     font-weight:900;
+    margin-bottom:10px;
 
     background:
-    linear-gradient(
-        135deg,
-        #ffffff,
-        #c4b5fd,
-        #8b5cf6
-    );
+        linear-gradient(
+            135deg,
+            #fff,
+            #c4b5fd,
+            #8b5cf6
+        );
 
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
-
-    margin-bottom:10px;
 }
 
 .subtitle{
@@ -68,7 +63,7 @@ header{
 
 #status{
     color:var(--muted);
-    margin-bottom:20px;
+    margin-bottom:15px;
 }
 
 #search{
@@ -80,86 +75,51 @@ header{
     border:none;
     outline:none;
 
-    border-radius:14px;
+    border-radius:12px;
 
-    background:rgba(255,255,255,.05);
-
-    border:1px solid rgba(255,255,255,.08);
-
+    background:#1b1b2f;
     color:white;
-
-    font-size:15px;
 }
-
-#search:focus{
-    border-color:var(--accent);
-
-    box-shadow:
-    0 0 20px rgba(139,92,246,.35);
-}
-
-/* GAME GRID */
 
 #game-grid{
     max-width:1900px;
-
     margin:auto;
 
     display:grid;
-
     grid-template-columns:
-    repeat(auto-fill,minmax(180px,1fr));
+        repeat(auto-fill,minmax(180px,1fr));
 
     gap:16px;
 }
 
 .game-card{
-    background:rgba(255,255,255,.05);
-
-    border:1px solid rgba(255,255,255,.08);
+    background:var(--card);
 
     border-radius:16px;
 
     overflow:hidden;
 
-    backdrop-filter:blur(12px);
-
-    transition:.25s;
-
-    display:flex;
-    flex-direction:column;
+    transition:.2s;
 }
 
 .game-card:hover{
-
-    transform:
-    translateY(-5px)
-    scale(1.03);
-
-    border-color:
-    rgba(139,92,246,.4);
-
-    box-shadow:
-    0 0 25px rgba(139,92,246,.25);
+    transform:translateY(-5px);
 }
-
-/* FULL ICON */
 
 .game-cover{
     width:100%;
-
     aspect-ratio:1/1;
 
     object-fit:contain;
 
-    padding:12px;
+    padding:10px;
 
     background:
-    linear-gradient(
-        180deg,
-        rgba(139,92,246,.15),
-        transparent
-    );
+        linear-gradient(
+            180deg,
+            rgba(139,92,246,.15),
+            transparent
+        );
 }
 
 .game-info{
@@ -167,12 +127,11 @@ header{
 }
 
 .game-title{
-    font-size:14px;
-    font-weight:700;
-
     text-align:center;
+    font-size:14px;
+    font-weight:bold;
 
-    min-height:38px;
+    min-height:32px;
 
     margin-bottom:8px;
 }
@@ -182,23 +141,22 @@ header{
 
     border:none;
 
-    border-radius:10px;
-
-    cursor:pointer;
-
-    font-size:13px;
-    font-weight:700;
-
     padding:8px;
+
+    border-radius:10px;
 
     color:white;
 
+    cursor:pointer;
+
+    font-weight:bold;
+
     background:
-    linear-gradient(
-        135deg,
-        var(--accent),
-        var(--accent2)
-    );
+        linear-gradient(
+            135deg,
+            var(--accent),
+            var(--accent2)
+        );
 }
 
 .play-btn:hover{
@@ -209,14 +167,8 @@ header{
 
 #player-container{
     display:none;
-
     flex-direction:column;
-
     gap:10px;
-
-    max-width:1800px;
-
-    margin:auto;
 }
 
 .player-bar{
@@ -227,26 +179,20 @@ header{
 .player-btn{
     border:none;
 
-    border-radius:12px;
-
     padding:12px 18px;
 
-    cursor:pointer;
-
-    font-weight:700;
-
-    color:white;
+    border-radius:10px;
 
     background:
-    linear-gradient(
-        135deg,
-        var(--accent),
-        var(--accent2)
-    );
-}
+        linear-gradient(
+            135deg,
+            var(--accent),
+            var(--accent2)
+        );
 
-.player-btn:hover{
-    filter:brightness(1.1);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
 }
 
 #game-frame{
@@ -255,7 +201,7 @@ header{
 
     border:none;
 
-    border-radius:16px;
+    border-radius:12px;
 
     background:black;
 }
@@ -280,7 +226,7 @@ header{
     <input
         id="search"
         type="text"
-        placeholder="🔍 Search Games"
+        placeholder="🔍 Search games..."
     >
 
 </header>
@@ -318,24 +264,34 @@ let allGames = [];
 
 async function loadGames(){
 
+    const status =
+        document.getElementById("status");
+
     try{
+
+        status.textContent =
+            "Connecting to API...";
 
         const response =
             await fetch("/api/games");
 
         if(!response.ok){
-            throw new Error();
-
+            throw new Error(
+                "API returned " +
+                response.status
+            );
         }
 
         const games =
             await response.json();
 
+        console.log(games);
+
         allGames = games;
 
-        document.getElementById("status")
-            .textContent =
-            `${games.length} Games Available`;
+        status.textContent =
+            games.length +
+            " Games Available";
 
         renderGames(games);
 
@@ -344,9 +300,9 @@ async function loadGames(){
 
         console.error(error);
 
-        document.getElementById("status")
-            .textContent =
-            "Failed To Load Games";
+        status.textContent =
+            "Error: " +
+            error.message;
     }
 }
 
@@ -357,7 +313,7 @@ function renderGames(games){
 
     grid.innerHTML = "";
 
-    games.forEach(game=>{
+    games.forEach(game => {
 
         const card =
             document.createElement("div");
@@ -380,44 +336,42 @@ function renderGames(games){
                 </div>
 
                 <button
-                    class="play-btn"
-                    onclick="playGame('${game.url}')">
+                    class="play-btn">
                     ▶ Play
                 </button>
 
             </div>
         `;
 
+        card
+        .querySelector(".play-btn")
+        .addEventListener(
+            "click",
+            () => playGame(game.url)
+        );
+
         grid.appendChild(card);
 
     });
-
 }
 
 function playGame(url){
 
-    document.getElementById("header").style.display =
-        "none";
+    document
+        .getElementById("header")
+        .style.display = "none";
 
-    document.getElementById("game-grid").style.display =
-        "none";
+    document
+        .getElementById("game-grid")
+        .style.display = "none";
 
-    document.getElementById("player-container").style.display =
-        "flex";
+    document
+        .getElementById("player-container")
+        .style.display = "flex";
 
-    document.getElementById("game-frame").src =
-        url;
+    document
+        .getElementById("game-frame")
+        .src = url;
 }
 
-function exitGame(){
-
-    document.getElementById("game-frame").src = "";
-
-    document.getElementById("player-container").style.display =
-        "none";
-
-    document.getElementById("header").style.display =
-        "block";
-
-    document.getElementById("game-grid").style.display =
-        "grid
+function exitGame(
