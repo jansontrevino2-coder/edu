@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Game Database</title>
 
 <style>
+
 :root{
     --bg:#121212;
     --card:#1e1e1e;
@@ -15,193 +17,171 @@
 
 *{
     margin:0;
-    padding:0;
-    box-sizing:border-box;
+    padding:0;*    box-sizing:border-box;
 }
 
-body{
+body*
     background:var(--bg);
-    color:var(--text);
-    font-family:Arial,sans-serif;
+    col*r:var(--text);
+    font-family:Ari*l,sans-serif;
     padding:20px;
 }
-
-header{
+*header{
     text-align:center;
-    margin-bottom:30px;
+   *margin-bottom:30px;
 }
 
 h1{
-    color:var(--accent);
+    col*r:var(--accent);
+    margin-bottom*10px;
 }
 
 #status{
-    margin-top:10px;
     color:#aaa;
-}
+*
 
 #game-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-    gap:20px;
-    max-width:1400px;
+    max-width:1400px*
     margin:auto;
+
+    display:gri*;
+    grid-template-columns:repeat*auto-fill,minmax(250px,1fr));
+    *ap:20px;
 }
 
 .game-card{
-    background:var(--card);
-    border-radius:12px;
+    backgr*und:var(--card);
+    border-radius*12px;
     overflow:hidden;
-    box-shadow:0 4px 12px rgba(0,0,0,.3);
-    transition:.2s;
+    box*shadow:0 4px 16px rgba(0,0,0,.3);
+*   transition:.2s;
 }
 
-.game-card:hover{
-    transform:translateY(-5px);
+.game-card:h*ver{
+    transform:translateY(-6px*;
 }
 
 .game-cover{
     width:100%;
-    height:160px;
-    object-fit:cover;
+*   height:160px;
+    object-fit:co*er;
+    background:#333;
 }
 
-.game-info{
+.game-*nfo{
     padding:15px;
 }
 
-.game-title{
-    font-size:16px;
+.game-ti*le{
     font-weight:bold;
-    margin-bottom:12px;
+    marg*n-bottom:12px;
 }
 
 .play-btn{
-    width:100%;
+    w*dth:100%;
     border:none;
-    background:var(--accent);
-    color:white;
+    bac*ground:var(--accent);
+    color:wh*te;
     padding:10px;
-    border-radius:8px;
+    border-r*dius:8px;
     cursor:pointer;
-    font-weight:bold;
+    *ont-weight:bold;
 }
+
+.play-btn:hove*{
+    opacity:.9;
+}
+
 </style>
-</head>
+</he*d>
 <body>
 
 <header>
-    <h1>🎮 Game Database</h1>
-    <div id="status">Scanning Games...</div>
-</header>
-
+    <h1>🎮 Gam* Database</h1>
+    <div id="status*>Scanning games...</div>
+</header>*
 <div id="game-grid"></div>
 
-<script>
+<scri*t>
 
-// CHANGE THESE
-const GITHUB_OWNER = "YOUR_GITHUB_USERNAME";
-const GITHUB_REPO = "YOUR_REPOSITORY_NAME";
-const GAMES_FOLDER = "Games";
+async function loadGames(){
 
-async function loadGames() {
+ *  const status =
+        document.*etElementById("status");
 
-    const status =
-        document.getElementById("status");
+    try{*
+        const response =
+        *   await fetch("/api/games");
+
+   *    if(!response.ok){
+            *hrow new Error("API Error");
+     *  }
+
+        const games =
+       *    await response.json();
+
+      * status.textContent =
+            *${games.length} games found`;
+
+   *    renderGames(games);
+
+    }
+   *catch(error){
+
+        console.err*r(error);
+
+        status.textCont*nt =
+            "Failed to load g*mes";
+    }
+}
+
+function renderGame*(games){
 
     const grid =
-        document.getElementById("game-grid");
+       *document.getElementById("game-grid*);
 
-    try {
+    grid.innerHTML = "";
 
-        const foldersResponse =
-            await fetch(
-                `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GAMES_FOLDER}`
-            );
+    *ames.forEach(game=>{
 
-        const folders =
-            await foldersResponse.json();
+        cons* card =
+            document.creat*Element("div");
 
-        const games = [];
+        card.clas*Name =
+            "game-card";
 
-        for (const folder of folders) {
+ *      card.innerHTML = `
+         *  <img
+                class="game*cover"
+                src="${game*cover}"
+                alt="${gam*.name}"
+                onerror="t*is.src='https://via.placeholder.co*/400x250?text=No+Cover'"
+         *  >
 
-            if (folder.type !== "dir")
-                continue;
+            <div class="game-*nfo">
 
-            const filesResponse =
-                await fetch(folder.url);
-
-            const files =
-                await filesResponse.json();
-
-            const html =
-                files.find(file =>
-                    file.name
-                        .toLowerCase()
-                        .endsWith(".html")
-                );
-
-            const cover =
-                files.find(file =>
-                    /\.(png|jpg|jpeg|webp|gif)$/i
-                    .test(file.name)
-                );
-
-            if (!html) continue;
-
-            games.push({
-                name: folder.name,
-                cover: cover
-                    ? cover.download_url
-                    : "https://via.placeholder.com/400x250?text=No+Cover",
-                pageUrl:
-                    `/Games/${encodeURIComponent(folder.name)}/${encodeURIComponent(html.name)}`
-            });
-        }
-
-        status.textContent =
-            `${games.length} games found`;
-
-        grid.innerHTML = "";
-
-        games.forEach(game => {
-
-            const card =
-                document.createElement("div");
-
-            card.className =
-                "game-card";
-
-            card.innerHTML = `
-                <img
-                    class="game-cover"
-                    src="${game.cover}"
-                >
-
-                <div class="game-info">
-                    <div class="game-title">
-                        ${game.name}
-                    </div>
-
-                    <button
-                        class="play-btn"
-                        onclick="window.location.href='${game.pageUrl}'">
-                        ▶ Play
-                    </button>
+                <div class=*game-title">
+                    $*game.name}
                 </div>
-            `;
+*                <button
+          *         class="play-btn"
+        *           onclick="playGame('${ga*e.url}')">
+                    ▶ P*ay
+                </button>
 
-            grid.appendChild(card);
-        });
+    *       </div>
+        `;
 
-    } catch (error) {
+        *rid.appendChild(card);
 
-        console.error(error);
+    });
 
-        status.textContent =
-            "Failed to scan games";
-    }
+}
+
+function playGame(url){
+
+    window.location.href = url;
+
 }
 
 loadGames();
