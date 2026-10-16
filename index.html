@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Database</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#121212;
+    color:white;
+    padding:20px;
+}
+
+h1{
+    text-align:center;
+    color:#fc6d26;
+}
+
+#game-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:20px;
+    max-width:1400px;
+    margin:auto;
+}
+
+.game-card{
+    background:#1e1e1e;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.game-cover{
+    width:100%;
+    height:160px;
+    object-fit:cover;
+}
+
+.game-info{
+    padding:15px;
+}
+
+.play-btn{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:6px;
+    background:#fc6d26;
+    color:white;
+    cursor:pointer;
+    font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<h1>🎮 Game Database</h1>
+
+<div id="game-grid"></div>
+
+<script>
+
+async function loadGames(){
+
+    const response = await fetch("/games.json");
+    const games = await response.json();
+
+    const grid = document.getElementById("game-grid");
+
+    games.forEach(game => {
+
+        const card = document.createElement("div");
+
+        card.className = "game-card";
+
+        card.innerHTML = `
+            <img
+                src="${game.cover}"
+                class="game-cover"
+                alt="${game.name}"
+            >
+
+            <div class="game-info">
+                <h3>${game.name}</h3>
+
+                <button
+                    class="play-btn"
+                    onclick="window.location.href='${game.url}'">
+                    ▶ Play
+                </button>
+            </div>
+        `;
+
+        grid.appendChild(card);
+    });
+}
+
+loadGames();
+
+</script>
+
+</body>
+</html>
