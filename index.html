@@ -3,11 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>UniversalGMS Launcher</title>
 
 <style>
-
 *{
     margin:0;
     padding:0;
@@ -16,28 +14,23 @@
 
 body{
     height:100vh;
-
     display:flex;
     justify-content:center;
     align-items:center;
 
-    font-family:Inter, Arial, sans-serif;
+    font-family:Arial,sans-serif;
 
     background:
-        radial-gradient(
-            circle at center,
-            rgba(139,92,246,.35),
-            transparent 40%
-        ),
+        radial-gradient(circle at center,
+        rgba(139,92,246,.35),
+        transparent 40%),
         #0f0f1a;
 
     color:white;
 }
 
 .launcher{
-
     width:450px;
-
     text-align:center;
 
     padding:40px;
@@ -50,41 +43,36 @@ body{
 
     border:1px solid rgba(255,255,255,.1);
 
-    box-shadow:
-        0 0 40px rgba(139,92,246,.3);
+    box-shadow:0 0 40px rgba(139,92,246,.3);
 }
 
 .logo{
-    font-size:4rem;
-    margin-bottom:15px;
+    font-size:5rem;
 }
 
 .title{
-    font-size:2.8rem;
+    font-size:3rem;
     font-weight:900;
+    margin-top:10px;
 
     background:
         linear-gradient(
             135deg,
-            #ffffff,
-            #d8b4fe,
+            #fff,
+            #c4b5fd,
             #8b5cf6
         );
 
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
-
-    margin-bottom:10px;
 }
 
 .subtitle{
-    color:#a1a1aa;
-
-    margin-bottom:30px;
+    color:#aaa;
+    margin:20px 0;
 }
 
 .launch-btn{
-
     width:100%;
 
     border:none;
@@ -98,7 +86,7 @@ body{
     color:white;
 
     font-size:1rem;
-    font-weight:700;
+    font-weight:bold;
 
     background:
         linear-gradient(
@@ -106,34 +94,18 @@ body{
             #8b5cf6,
             #6d28d9
         );
-
-    transition:.2s;
 }
 
 .launch-btn:hover{
-    transform:translateY(-2px);
-
-    box-shadow:
-        0 0 25px rgba(139,92,246,.4);
+    filter:brightness(1.1);
 }
-
-.footer{
-    margin-top:20px;
-
-    color:#71717a;
-
-    font-size:.9rem;
-}
-
 </style>
 </head>
 <body>
 
 <div class="launcher">
 
-    <div class="logo">
-        🎮
-    </div>
+    <div class="logo">🎮</div>
 
     <div class="title">
         UniversalGMS
@@ -151,62 +123,17 @@ body{
 
     </button>
 
-    <div class="footer">
-        Click Launch to open UniversalGMS
-    </div>
-
 </div>
 
 <script>
 
 function launchHub(){
 
-    const popup =
-        window.open("about:blank","_blank");
+    window.open(
+        "/hub.html",
+        "_blank"
+    );
 
-    if(!popup){
-        alert(
-            "Please allow popups for UniversalGMS."
-        );
-        return;
-    }
-
-    popup.document.write(`
-<!DOCTYPE html>
-<html>
-<head>
-<title>UniversalGMS</title>
-
-<style>
-html,body{
-    margin:0;
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    background:#000;
-}
-
-iframe{
-    width:100%;
-    height:100%;
-    border:none;
-}
-</style>
-
-</head>
-
-<body>
-
-<iframe
-    src="/hub.html"
-    allowfullscreen>
-</iframe>
-
-</body>
-</html>
-    `);
-
-    popup.document.close();
 }
 
 </script>
