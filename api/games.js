@@ -1,40 +1,64 @@
 import fs from "fs";
 import path from "path";
 
-export default async function handler(req, res) {
+export default function handler(req, res) {
 
-    const gamesDir = path.join(process.cwd(), "Games");
+    try {
 
-    const folders = fs.readdirSync(gamesDir);
+        const gamesDir = path.join(process.cwd(), "Games");
 
-    const games = [];
+        if (!fs.existsSync(gamesDir)) {
+            return res.status(404).json({
+                error: "Games folder not found"
+            });
+        }
 
-    for (const folder of folders) {
+        const folders = fs.readdirSync(gamesDir);
 
-        const folderPath = path.join(gamesDir, folder);
+        const games = [];
 
-        if (!fs.statSync(folderPath).isDirectory()) continue;
+        for (const folder of folders) {
 
-        const files = fs.readdirSync(folderPath);
+            const folderPath = path.join(gamesDir, folder);
 
-        const htmlFile = files.find(file =>
-            file.toLowerCase().endsWith(".html")
-        );
+            if (!fs.statSync(folderPath).isDirectory()) {
+                continue;
+            }
 
-        const coverFile = files.find(file =>
-            /\.(png|jpg|jpeg|webp|gif)$/i.test(file)
-        );
+            const files = fs.readdirSync(folderPath);
 
-        if (!htmlFile) continue;
+            const htmlFile = files.find(file =>
+                file.toLowerCase().endsWith(".html")
+            );
 
-        games.push({
-            name: folder,
-            url: `/Games/${encodeURIComponent(folder)}/${encodeURIComponent(htmlFile)}`,
-            cover: coverFile
-                ? `/Games/${encodeURIComponent(folder)}/${encodeURIComponent(coverFile)}`
-                : "https://via.placeholder.com/400x250?text=No+Cover"
+            const coverFile = files.find(file =>
+                /\.(png|jpg|jpeg|webp|gif)$/i.test(file)
+            );
+
+            if (!htmlFile) {
+                continue;
+            }
+
+            games.push({
+                name: folder,
+                url: `/Games/${encodeURIComponent(folder)}/${encodeURIComponent(htmlFile)}`,
+                cover: coverFile
+                    ? `/Games/${encodeURIComponent(folder)}/${encodeURIComponent(coverFile)}`
+                    : "https://via.placeholder.com/400x250?text=No+Cover"
+            });
+
+        }
+
+        res.status(200).json(games);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: error.message
         });
+
     }
 
-    res.status(200).json(games);
 }
