@@ -3,14 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Game Database</title>
+
+<title>UniversalEDU</title>
 
 <style>
 :root{
-    --bg:#121212;
-    --card:#1e1e1e;
-    --accent:#fc6d26;
+    --bg:#0f0f1a;
+    --bg2:#171727;
+    --card:#1f1f33;
+    --accent:#8b5cf6;
+    --accent2:#6d28d9;
     --text:#ffffff;
+    --muted:#9ca3af;
 }
 
 *{
@@ -20,88 +24,155 @@
 }
 
 body{
-    background:var(--bg);
+    min-height:100vh;
+    font-family:Inter, Arial, sans-serif;
     color:var(--text);
-    font-family:Arial,sans-serif;
+
+    background:
+        radial-gradient(circle at top,
+        rgba(139,92,246,.25),
+        transparent 35%),
+        var(--bg);
+
     padding:20px;
 }
 
 header{
     text-align:center;
-    margin-bottom:25px;
+    margin-bottom:30px;
 }
 
-h1{
-    color:var(--accent);
+.logo{
+    font-size:3rem;
+    font-weight:900;
+
+    background:linear-gradient(
+        135deg,
+        #ffffff,
+        #c4b5fd
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+
     margin-bottom:10px;
 }
 
-#status{
-    color:#aaa;
+.subtitle{
+    color:var(--muted);
     margin-bottom:15px;
+}
+
+#status{
+    color:var(--muted);
+    margin-bottom:20px;
 }
 
 #search{
     width:100%;
-    max-width:600px;
-    padding:12px;
+    max-width:700px;
+
+    padding:15px;
+
     border:none;
     outline:none;
-    border-radius:10px;
-    background:#232323;
+
+    border-radius:14px;
+
+    background:rgba(255,255,255,.05);
+
     color:white;
+
     font-size:16px;
+
+    backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,.08);
+}
+
+#search:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 20px rgba(139,92,246,.4);
 }
 
 #game-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
-    gap:20px;
-    max-width:1500px;
+    max-width:1600px;
     margin:auto;
+
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fill,minmax(260px,1fr));
+
+    gap:20px;
 }
 
 .game-card{
-    background:var(--card);
-    border-radius:12px;
+    background:rgba(255,255,255,.05);
+
+    backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:18px;
+
     overflow:hidden;
-    transition:.2s;
-    box-shadow:0 4px 12px rgba(0,0,0,.3);
+
+    transition:.25s;
 }
 
 .game-card:hover{
-    transform:translateY(-5px);
+
+    transform:
+    translateY(-8px)
+    scale(1.02);
+
+    border-color:rgba(139,92,246,.5);
+
+    box-shadow:
+        0 0 30px rgba(139,92,246,.25);
 }
 
 .game-cover{
     width:100%;
-    height:160px;
+    height:180px;
     object-fit:cover;
 }
 
 .game-info{
-    padding:15px;
+    padding:16px;
 }
 
 .game-title{
     font-size:18px;
-    font-weight:bold;
-    margin-bottom:10px;
+    font-weight:700;
+    margin-bottom:12px;
 }
 
 .play-btn{
     width:100%;
-    padding:10px;
+
     border:none;
-    border-radius:8px;
-    background:var(--accent);
-    color:white;
+
+    padding:12px;
+
+    border-radius:12px;
+
     cursor:pointer;
-    font-weight:bold;
+
+    font-weight:700;
+
+    color:white;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            var(--accent2)
+        );
 }
 
 .play-btn:hover{
-    opacity:.9;
+    filter:brightness(1.1);
 }
 
 /* PLAYER */
@@ -110,7 +181,8 @@ h1{
     display:none;
     flex-direction:column;
     gap:10px;
-    max-width:1600px;
+
+    max-width:1700px;
     margin:auto;
 }
 
@@ -121,27 +193,55 @@ h1{
 
 .player-btn{
     border:none;
-    background:var(--accent);
-    color:white;
-    padding:10px 15px;
-    border-radius:8px;
+
+    padding:12px 18px;
+
+    border-radius:12px;
+
     cursor:pointer;
-    font-weight:bold;
+
+    font-weight:700;
+
+    color:white;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            var(--accent2)
+        );
+}
+
+.player-btn:hover{
+    filter:brightness(1.1);
 }
 
 #game-frame{
     width:100%;
-    height:85vh;
+    height:88vh;
+
     border:none;
-    border-radius:12px;
+
+    border-radius:18px;
+
     background:black;
+
+    box-shadow:
+        0 0 40px rgba(139,92,246,.3);
 }
 </style>
 </head>
 <body>
 
 <header id="header">
-    <h1>🎮 Game Database</h1>
+
+    <div class="logo">
+        UniversalEDU
+    </div>
+
+    <div class="subtitle">
+        Learn • Play • Explore
+    </div>
 
     <div id="status">
         Scanning games...
@@ -150,8 +250,9 @@ h1{
     <input
         type="text"
         id="search"
-        placeholder="Search games..."
+        placeholder="🔍 Search games..."
     >
+
 </header>
 
 <div id="game-grid"></div>
@@ -192,14 +293,18 @@ async function loadGames(){
         const response =
             await fetch("/api/games");
 
+        if(!response.ok){
+            throw new Error("Unable to load API");
+        }
+
         const games =
             await response.json();
 
         allGames = games;
 
         document.getElementById("status")
-            .textContent =
-            `${games.length} games found`;
+        .textContent =
+            `${games.length} games available`;
 
         renderGames(games);
 
@@ -208,7 +313,7 @@ async function loadGames(){
         console.error(error);
 
         document.getElementById("status")
-            .textContent =
+        .textContent =
             "Failed to load games";
     }
 }
@@ -225,7 +330,8 @@ function renderGames(games){
         const card =
             document.createElement("div");
 
-        card.className = "game-card";
+        card.className =
+            "game-card";
 
         card.innerHTML = `
             <img
@@ -256,33 +362,39 @@ function renderGames(games){
 
 function playGame(url){
 
-    document.getElementById("header")
+    document
+        .getElementById("header")
         .style.display = "none";
 
-    document.getElementById("game-grid")
+    document
+        .getElementById("game-grid")
         .style.display = "none";
 
-    document.getElementById("player-container")
+    document
+        .getElementById("player-container")
         .style.display = "flex";
 
-    document.getElementById("game-frame")
+    document
+        .getElementById("game-frame")
         .src = url;
 }
 
 function exitGame(){
 
-    const frame =
-        document.getElementById("game-frame");
+    document
+        .getElementById("game-frame")
+        .src = "";
 
-    frame.src = "";
-
-    document.getElementById("player-container")
+    document
+        .getElementById("player-container")
         .style.display = "none";
 
-    document.getElementById("header")
+    document
+        .getElementById("header")
         .style.display = "block";
 
-    document.getElementById("game-grid")
+    document
+        .getElementById("game-grid")
         .style.display = "grid";
 }
 
@@ -301,14 +413,16 @@ function fullscreenGame(){
 
 document
 .getElementById("search")
-.addEventListener("input", e=>{
+.addEventListener("input", e => {
 
     const q =
         e.target.value.toLowerCase();
 
     renderGames(
         allGames.filter(game =>
-            game.name.toLowerCase().includes(q)
+            game.name
+                .toLowerCase()
+                .includes(q)
         )
     );
 });
