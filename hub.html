@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>UniversalGMS</title>
+
+<style>
+:root{
+    --bg:#0f0f1a;
+    --card:#1f1f33;
+    --accent:#8b5cf6;
+    --accent2:#6d28d9;
+    --text:#ffffff;
+    --muted:#a1a1aa;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    font-family:Inter,Arial,sans-serif;
+    color:var(--text);
+
+    background:
+    radial-gradient(
+        circle at top,
+        rgba(139,92,246,.25),
+        transparent 35%
+    ),
+    var(--bg);
+
+    padding:20px;
+}
+
+header{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.logo{
+    font-size:3.5rem;
+    font-weight:900;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ffffff,
+        #c4b5fd,
+        #8b5cf6
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:var(--muted);
+    margin-bottom:15px;
+}
+
+#status{
+    color:var(--muted);
+    margin-bottom:20px;
+}
+
+#search{
+    width:100%;
+    max-width:700px;
+
+    padding:14px;
+
+    border:none;
+    outline:none;
+
+    border-radius:14px;
+
+    background:rgba(255,255,255,.05);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    color:white;
+
+    font-size:15px;
+}
+
+#search:focus{
+    border-color:var(--accent);
+
+    box-shadow:
+    0 0 20px rgba(139,92,246,.35);
+}
+
+/* GAME GRID */
+
+#game-grid{
+    max-width:1900px;
+
+    margin:auto;
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fill,minmax(180px,1fr));
+
+    gap:16px;
+}
+
+.game-card{
+    background:rgba(255,255,255,.05);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:16px;
+
+    overflow:hidden;
+
+    backdrop-filter:blur(12px);
+
+    transition:.25s;
+
+    display:flex;
+    flex-direction:column;
+}
+
+.game-card:hover{
+
+    transform:
+    translateY(-5px)
+    scale(1.03);
+
+    border-color:
+    rgba(139,92,246,.4);
+
+    box-shadow:
+    0 0 25px rgba(139,92,246,.25);
+}
+
+/* FULL ICON */
+
+.game-cover{
+    width:100%;
+
+    aspect-ratio:1/1;
+
+    object-fit:contain;
+
+    padding:12px;
+
+    background:
+    linear-gradient(
+        180deg,
+        rgba(139,92,246,.15),
+        transparent
+    );
+}
+
+.game-info{
+    padding:10px;
+}
+
+.game-title{
+    font-size:14px;
+    font-weight:700;
+
+    text-align:center;
+
+    min-height:38px;
+
+    margin-bottom:8px;
+}
+
+.play-btn{
+    width:100%;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:13px;
+    font-weight:700;
+
+    padding:8px;
+
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        var(--accent),
+        var(--accent2)
+    );
+}
+
+.play-btn:hover{
+    filter:brightness(1.1);
+}
+
+/* PLAYER */
+
+#player-container{
+    display:none;
+
+    flex-direction:column;
+
+    gap:10px;
+
+    max-width:1800px;
+
+    margin:auto;
+}
+
+.player-bar{
+    display:flex;
+    gap:10px;
+}
+
+.player-btn{
+    border:none;
+
+    border-radius:12px;
+
+    padding:12px 18px;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        var(--accent),
+        var(--accent2)
+    );
+}
+
+.player-btn:hover{
+    filter:brightness(1.1);
+}
+
+#game-frame{
+    width:100%;
+    height:88vh;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:black;
+}
+</style>
+</head>
+<body>
+
+<header id="header">
+
+    <div class="logo">
+        🎮 UniversalGMS
+    </div>
+
+    <div class="subtitle">
+        Your Universal Gaming Hub
+    </div>
+
+    <div id="status">
+        Loading games...
+    </div>
+
+    <input
+        id="search"
+        type="text"
+        placeholder="🔍 Search Games"
+    >
+
+</header>
+
+<div id="game-grid"></div>
+
+<div id="player-container">
+
+    <div class="player-bar">
+
+        <button
+            class="player-btn"
+            onclick="exitGame()">
+            ⬅ Exit Game
+        </button>
+
+        <button
+            class="player-btn"
+            onclick="fullscreenGame()">
+            ⛶ Fullscreen
+        </button>
+
+    </div>
+
+    <iframe
+        id="game-frame"
+        allowfullscreen>
+    </iframe>
+
+</div>
+
+<script>
+
+let allGames = [];
+
+async function loadGames(){
+
+    try{
+
+        const response =
+            await fetch("/api/games");
+
+        if(!response.ok){
+            throw new Error();
+
+        }
+
+        const games =
+            await response.json();
+
+        allGames = games;
+
+        document.getElementById("status")
+            .textContent =
+            `${games.length} Games Available`;
+
+        renderGames(games);
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        document.getElementById("status")
+            .textContent =
+            "Failed To Load Games";
+    }
+}
+
+function renderGames(games){
+
+    const grid =
+        document.getElementById("game-grid");
+
+    grid.innerHTML = "";
+
+    games.forEach(game=>{
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "game-card";
+
+        card.innerHTML = `
+            <img
+                class="game-cover"
+                src="${game.cover}"
+                alt="${game.name}"
+                onerror="this.src='https://via.placeholder.com/300?text=No+Cover'"
+            >
+
+            <div class="game-info">
+
+                <div class="game-title">
+                    ${game.name}
+                </div>
+
+                <button
+                    class="play-btn"
+                    onclick="playGame('${game.url}')">
+                    ▶ Play
+                </button>
+
+            </div>
+        `;
+
+        grid.appendChild(card);
+
+    });
+
+}
+
+function playGame(url){
+
+    document.getElementById("header").style.display =
+        "none";
+
+    document.getElementById("game-grid").style.display =
+        "none";
+
+    document.getElementById("player-container").style.display =
+        "flex";
+
+    document.getElementById("game-frame").src =
+        url;
+}
+
+function exitGame(){
+
+    document.getElementById("game-frame").src = "";
+
+    document.getElementById("player-container").style.display =
+        "none";
+
+    document.getElementById("header").style.display =
+        "block";
+
+    document.getElementById("game-grid").style.display =
+        "grid
