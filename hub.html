@@ -273,8 +273,9 @@ async function loadGames(){
             "Connecting to API...";
 
         const response =
-            await fetch("/api/games");
-
+    await fetch(
+        "https://universaledu.vercel.app/api/games"
+    );
         if(!response.ok){
             throw new Error(
                 "API returned " +
