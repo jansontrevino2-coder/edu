@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Game Database</title>
 
 <style>
@@ -33,16 +33,16 @@ header{
 
 h1{
     color:var(--accent);
-    margin-bottom:10px;
 }
 
 #status{
+    margin-top:10px;
     color:#aaa;
 }
 
 #game-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
     gap:20px;
     max-width:1400px;
     margin:auto;
@@ -52,8 +52,8 @@ h1{
     background:var(--card);
     border-radius:12px;
     overflow:hidden;
-    transition:.2s;
     box-shadow:0 4px 12px rgba(0,0,0,.3);
+    transition:.2s;
 }
 
 .game-card:hover{
@@ -64,7 +64,6 @@ h1{
     width:100%;
     height:160px;
     object-fit:cover;
-    background:#333;
 }
 
 .game-info{
@@ -79,17 +78,13 @@ h1{
 
 .play-btn{
     width:100%;
-    padding:10px;
     border:none;
-    border-radius:8px;
     background:var(--accent);
     color:white;
+    padding:10px;
+    border-radius:8px;
     cursor:pointer;
     font-weight:bold;
-}
-
-.play-btn:hover{
-    opacity:.9;
 }
 </style>
 </head>
@@ -97,96 +92,116 @@ h1{
 
 <header>
     <h1>🎮 Game Database</h1>
-    <div id="status">Scanning games...</div>
+    <div id="status">Scanning Games...</div>
 </header>
 
 <div id="game-grid"></div>
 
 <script>
 
+// CHANGE THESE
+const GITHUB_OWNER = "YOUR_GITHUB_USERNAME";
+const GITHUB_REPO = "YOUR_REPOSITORY_NAME";
+const GAMES_FOLDER = "Games";
+
 async function loadGames() {
 
     const status =
         document.getElementById("status");
 
+    const grid =
+        document.getElementById("game-grid");
+
     try {
 
-        const response =
-            await fetch("/api/games");
-
-        if (!response.ok) {
-            throw new Error(
-                "Failed to load /api/games"
+        const foldersResponse =
+            await fetch(
+                `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GAMES_FOLDER}`
             );
+
+        const folders =
+            await foldersResponse.json();
+
+        const games = [];
+
+        for (const folder of folders) {
+
+            if (folder.type !== "dir")
+                continue;
+
+            const filesResponse =
+                await fetch(folder.url);
+
+            const files =
+                await filesResponse.json();
+
+            const html =
+                files.find(file =>
+                    file.name
+                        .toLowerCase()
+                        .endsWith(".html")
+                );
+
+            const cover =
+                files.find(file =>
+                    /\.(png|jpg|jpeg|webp|gif)$/i
+                    .test(file.name)
+                );
+
+            if (!html) continue;
+
+            games.push({
+                name: folder.name,
+                cover: cover
+                    ? cover.download_url
+                    : "https://via.placeholder.com/400x250?text=No+Cover",
+                pageUrl:
+                    `/Games/${encodeURIComponent(folder.name)}/${encodeURIComponent(html.name)}`
+            });
         }
-
-        const games =
-            await response.json();
-
-        renderGames(games);
 
         status.textContent =
             `${games.length} games found`;
 
-    } catch (err) {
+        grid.innerHTML = "";
 
-        console.error(err);
+        games.forEach(game => {
+
+            const card =
+                document.createElement("div");
+
+            card.className =
+                "game-card";
+
+            card.innerHTML = `
+                <img
+                    class="game-cover"
+                    src="${game.cover}"
+                >
+
+                <div class="game-info">
+                    <div class="game-title">
+                        ${game.name}
+                    </div>
+
+                    <button
+                        class="play-btn"
+                        onclick="window.location.href='${game.pageUrl}'">
+                        ▶ Play
+                    </button>
+                </div>
+            `;
+
+            grid.appendChild(card);
+        });
+
+    } catch (error) {
+
+        console.error(error);
 
         status.textContent =
             "Failed to scan games";
     }
-}
-
-function renderGames(games) {
-
-    const grid =
-        document.getElementById("game-grid");
-
-    grid.innerHTML = "";
-
-    if (!games.length) {
-
-        grid.innerHTML =
-            "<p>No games found.</p>";
-
-        return;
-    }
-
-    games.forEach(game => {
-
-        const card =
-            document.createElement("div");
-
-        card.className =
-            "game-card";
-
-        card.innerHTML = `
-            <img
-                class="game-cover"
-                src="${game.cover}"
-                alt="${game.name}"
-                onerror="this.src='https://via.placeholder.com/400x250?text=No+Cover'"
-            >
-
-            <div class="game-info">
-                <div class="game-title">
-                    ${game.name}
-                </div>
-
-                <button
-                    class="play-btn"
-                    onclick="playGame('${game.url}')">
-                    ▶ Play
-                </button>
-            </div>
-        `;
-
-        grid.appendChild(card);
-    });
-}
-
-function playGame(url) {
-    window.location.href = url;
 }
 
 loadGames();
