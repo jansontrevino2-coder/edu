@@ -9,12 +9,11 @@
 <style>
 :root{
     --bg:#0f0f1a;
-    --bg2:#171727;
     --card:#1f1f33;
     --accent:#8b5cf6;
     --accent2:#6d28d9;
     --text:#ffffff;
-    --muted:#9ca3af;
+    --muted:#a1a1aa;
 }
 
 *{
@@ -25,16 +24,17 @@
 
 body{
     min-height:100vh;
-    font-family:Inter, Arial, sans-serif;
-    color:var(--text);
+    font-family:Inter,Arial,sans-serif;
 
     background:
-        radial-gradient(
-            circle at top,
-            rgba(139,92,246,.25),
-            transparent 35%
-        ),
-        var(--bg);
+    radial-gradient(
+        circle at top,
+        rgba(139,92,246,.25),
+        transparent 35%
+    ),
+    var(--bg);
+
+    color:var(--text);
 
     padding:20px;
 }
@@ -49,18 +49,15 @@ header{
     font-weight:900;
 
     background:
-        linear-gradient(
-            135deg,
-            #ffffff,
-            #c4b5fd,
-            #8b5cf6
-        );
+    linear-gradient(
+        135deg,
+        #fff,
+        #c4b5fd,
+        #8b5cf6
+    );
 
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
-
-    text-shadow:
-        0 0 25px rgba(139,92,246,.35);
 
     margin-bottom:10px;
 }
@@ -101,19 +98,20 @@ header{
     border-color:var(--accent);
 
     box-shadow:
-        0 0 20px rgba(139,92,246,.4);
+    0 0 20px rgba(139,92,246,.35);
 }
 
-/* SMALLER GAME TILES */
+/* LIBRARY */
 
 #game-grid{
-    max-width:1800px;
+    max-width:1900px;
+
     margin:auto;
 
     display:grid;
 
     grid-template-columns:
-        repeat(auto-fill,minmax(190px,1fr));
+    repeat(auto-fill,minmax(180px,1fr));
 
     gap:16px;
 }
@@ -130,25 +128,41 @@ header{
     overflow:hidden;
 
     transition:.25s;
+
+    display:flex;
+    flex-direction:column;
 }
 
 .game-card:hover{
-
     transform:
-        translateY(-6px)
-        scale(1.03);
+    translateY(-5px)
+    scale(1.03);
 
     border-color:
-        rgba(139,92,246,.45);
+    rgba(139,92,246,.4);
 
     box-shadow:
-        0 0 25px rgba(139,92,246,.2);
+    0 0 25px rgba(139,92,246,.25);
 }
+
+/* FULL ICON DISPLAY */
 
 .game-cover{
     width:100%;
-    height:120px;
-    object-fit:cover;
+    aspect-ratio:1/1;
+
+    object-fit:contain;
+
+    padding:12px;
+
+    background:
+    linear-gradient(
+        180deg,
+        rgba(139,92,246,.15),
+        transparent
+    );
+
+    display:block;
 }
 
 .game-info{
@@ -159,9 +173,9 @@ header{
     font-size:14px;
     font-weight:700;
 
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+    min-height:36px;
+
+    text-align:center;
 
     margin-bottom:8px;
 }
@@ -171,37 +185,40 @@ header{
 
     border:none;
 
-    padding:8px;
-
     border-radius:10px;
 
+    padding:8px;
+
     cursor:pointer;
+
+    color:white;
 
     font-size:13px;
     font-weight:700;
 
-    color:white;
-
     background:
-        linear-gradient(
-            135deg,
-            var(--accent),
-            var(--accent2)
-        );
+    linear-gradient(
+        135deg,
+        var(--accent),
+        var(--accent2)
+    );
 }
 
 .play-btn:hover{
     filter:brightness(1.1);
 }
 
-/* GAME PLAYER */
+/* PLAYER */
 
 #player-container{
     display:none;
+
     flex-direction:column;
+
     gap:10px;
 
-    max-width:1700px;
+    max-width:1800px;
+
     margin:auto;
 }
 
@@ -219,16 +236,16 @@ header{
 
     cursor:pointer;
 
-    font-weight:700;
-
     color:white;
 
+    font-weight:700;
+
     background:
-        linear-gradient(
-            135deg,
-            var(--accent),
-            var(--accent2)
-        );
+    linear-gradient(
+        135deg,
+        var(--accent),
+        var(--accent2)
+    );
 }
 
 .player-btn:hover{
@@ -241,12 +258,9 @@ header{
 
     border:none;
 
-    border-radius:18px;
+    border-radius:16px;
 
     background:black;
-
-    box-shadow:
-        0 0 40px rgba(139,92,246,.3);
 }
 </style>
 </head>
@@ -259,7 +273,7 @@ header{
     </div>
 
     <div class="subtitle">
-        Play • Learn • Explore
+        Your Universal Gaming Hub
     </div>
 
     <div id="status">
@@ -267,8 +281,8 @@ header{
     </div>
 
     <input
-        type="text"
         id="search"
+        type="text"
         placeholder="🔍 Search games..."
     >
 
@@ -313,7 +327,7 @@ async function loadGames(){
             await fetch("/api/games");
 
         if(!response.ok){
-            throw new Error("API Error");
+            throw new Error("Failed to load games");
         }
 
         const games =
@@ -327,8 +341,7 @@ async function loadGames(){
 
         renderGames(games);
 
-    }
-    catch(error){
+    }catch(error){
 
         console.error(error);
 
@@ -345,7 +358,7 @@ function renderGames(games){
 
     grid.innerHTML = "";
 
-    games.forEach(game=>{
+    games.forEach(game => {
 
         const card =
             document.createElement("div");
@@ -358,7 +371,7 @@ function renderGames(games){
                 class="game-cover"
                 src="${game.cover}"
                 alt="${game.name}"
-                onerror="this.src='https://via.placeholder.com/400x250?text=No+Cover'"
+                onerror="this.src='https://via.placeholder.com/256?text=No+Cover'"
             >
 
             <div class="game-info">
@@ -377,8 +390,8 @@ function renderGames(games){
         `;
 
         grid.appendChild(card);
-    });
 
+    });
 }
 
 function playGame(url){
@@ -426,17 +439,18 @@ function fullscreenGame(){
 
 document
 .getElementById("search")
-.addEventListener("input", event => {
+.addEventListener("input", e => {
 
     const query =
-        event.target.value.toLowerCase();
+        e.target.value.toLowerCase();
 
-    const filtered =
+    renderGames(
         allGames.filter(game =>
-            game.name.toLowerCase().includes(query)
-        );
-
-    renderGames(filtered);
+            game.name
+                .toLowerCase()
+                .includes(query)
+        )
+    );
 });
 
 loadGames();
