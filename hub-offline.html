@@ -45,7 +45,6 @@ header{
 .logo{
     font-size:3.5rem;
     font-weight:900;
-    margin-bottom:10px;
 
     background:
     linear-gradient(
@@ -57,6 +56,8 @@ header{
 
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
+
+    margin-bottom:10px;
 }
 
 .subtitle{
@@ -86,6 +87,7 @@ header{
 
 #game-grid{
     max-width:1900px;
+
     margin:auto;
 
     display:grid;
@@ -98,11 +100,8 @@ header{
 
 .game-card{
     background:var(--card);
-
     border-radius:16px;
-
     overflow:hidden;
-
     transition:.2s;
 }
 
@@ -217,11 +216,11 @@ header{
     </div>
 
     <div class="subtitle">
-        Your Universal Gaming Hub
+        GitLab Powered Offline Hub
     </div>
 
     <div id="status">
-        Loading games...
+        Scanning GitLab...
     </div>
 
     <input
@@ -261,6 +260,8 @@ header{
 
 <script>
 
+const GITLAB_PROJECT_ID = "86390728";
+
 let allGames = [];
 
 function setStatus(text){
@@ -271,39 +272,101 @@ function setStatus(text){
     if(status){
         status.textContent = text;
     }
+
 }
 async function loadGames(){
 
     try{
 
         setStatus(
-            "Connecting to UniversalGMS..."
+            "Scanning GitLab Games..."
         );
 
         const response =
             await fetch(
-                "https://universaledu.vercel.app/api/games"
+                "https://gitlab.com/api/v4/projects/86390728/repository/tree?path=Games&recursive=true&per_page=1000"
             );
 
         if(!response.ok){
 
             throw new Error(
-                "API Error " +
+                "GitLab API Error " +
                 response.status
             );
 
         }
 
-        const games =
+        const files =
             await response.json();
 
-        allGames = games;
+        const games = {};
 
-        setStatus(
-            `${games.length} Games Available`
+        files.forEach(file => {
+
+            if(file.type !== "blob")
+                return;
+
+            const parts =
+                file.path.split("/");
+
+            if(parts.length < 3)
+                return;
+
+            const folder =
+                parts[1];
+
+            const fileName =
+                parts[parts.length - 1];
+
+            if(!games[folder]){
+
+                games[folder] = {
+                    name: folder,
+                    url: null,
+                    cover: null
+                };
+
+            }
+
+            const rawUrl =
+                `https://gitlab.com/api/v4/projects/86390728/repository/files/${encodeURIComponent(file.path)}/raw?ref=main`;
+
+            if(
+                fileName
+                .toLowerCase()
+                .endsWith(".html")
+            ){
+
+                games[folder].url =
+                    rawUrl;
+
+            }
+
+            if(
+                /\.(png|jpg|jpeg|webp|gif)$/i
+                .test(fileName)
+            ){
+
+                games[folder].cover =
+                    rawUrl;
+
+            }
+
+        });
+
+        allGames =
+            Object.values(games)
+            .filter(game => game.url);
+
+        allGames.sort((a,b)=>
+            a.name.localeCompare(b.name)
         );
 
-        renderGames(games);
+        setStatus(
+            `${allGames.length} Games Available`
+        );
+
+        renderGames(allGames);
 
     }
     catch(error){
@@ -311,7 +374,7 @@ async function loadGames(){
         console.error(error);
 
         setStatus(
-            "Failed to connect to UniversalGMS"
+            "Failed to connect to GitLab"
         );
 
     }
@@ -333,10 +396,14 @@ function renderGames(games){
         card.className =
             "game-card";
 
-        card.innerHTML = `
-            https://universaledu.vercel.app${game.cover}
+        const cover =
+            game.cover ||
+            "https://via.placeholder.com/300?text=No+Cover";
 
-            <div class="game-info">
+        card.innerHTML = `
+    ${cover}
+
+    <div class="game-info">
 
                 <div class="game-title">
                     ${game.name}
@@ -363,23 +430,15 @@ function renderGames(games){
 }
 function playGame(url){
 
-    document
-        .getElementById("header")
-        .style.display = "none";
+    /*
+      GitLab blocks iframe embedding for HTML files.
+      Therefore we open games in a new tab.
+    */
 
-    document
-        .getElementById("game-grid")
-        .style.display = "none";
-
-    document
-        .getElementById("player-container")
-        .style.display = "flex";
-
-    document
-        .getElementById("game-frame")
-        .src =
-        "https://universaledu.vercel.app" +
-        url;
+    window.open(
+        url,
+        "_blank"
+    );
 
 }
 
@@ -420,6 +479,7 @@ function fullscreenGame(){
     }
 
 }
+
 document
 .getElementById("search")
 .addEventListener(
