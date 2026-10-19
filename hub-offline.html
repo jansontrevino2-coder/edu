@@ -338,7 +338,7 @@ async function loadGames(){
             ){
 
                 games[folder].url =
-                    rawUrl;
+    `https://universaledu.vercel.app/${file.path}`;
 
             }
 
@@ -430,14 +430,10 @@ function renderGames(games){
 }
 function playGame(url){
 
-    /*
-      GitLab blocks iframe embedding for HTML files.
-      Therefore we open games in a new tab.
-    */
-
     window.open(
         url,
-        "_blank"
+        "_blank",
+        "noopener,noreferrer"
     );
 
 }
