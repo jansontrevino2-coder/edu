@@ -87,7 +87,6 @@ header{
 
 #game-grid{
     max-width:1900px;
-
     margin:auto;
 
     display:grid;
@@ -216,7 +215,7 @@ header{
     </div>
 
     <div class="subtitle">
-        GitLab Powered Offline Hub
+        GitLab Powered Hub
     </div>
 
     <div id="status">
@@ -328,8 +327,8 @@ async function loadGames(){
 
             }
 
-            const rawUrl =
-                `https://gitlab.com/api/v4/projects/86390728/repository/files/${encodeURIComponent(file.path)}/raw?ref=main`;
+            const vercelUrl =
+                `https://universaledu.vercel.app/${file.path}`;
 
             if(
                 fileName
@@ -338,7 +337,7 @@ async function loadGames(){
             ){
 
                 games[folder].url =
-    `https://universaledu.vercel.app/${file.path}`;
+                    vercelUrl;
 
             }
 
@@ -348,7 +347,7 @@ async function loadGames(){
             ){
 
                 games[folder].cover =
-                    rawUrl;
+                    vercelUrl;
 
             }
 
@@ -400,10 +399,11 @@ function renderGames(games){
             game.cover ||
             "https://via.placeholder.com/300?text=No+Cover";
 
-        card.innerHTML = `
+card.innerHTML = `
     ${cover}
 
     <div class="game-info">
+
 
                 <div class="game-title">
                     ${game.name}
@@ -430,11 +430,22 @@ function renderGames(games){
 }
 function playGame(url){
 
-    window.open(
-        url,
-        "_blank",
-        "noopener,noreferrer"
-    );
+    document
+        .getElementById("header")
+        .style.display = "none";
+
+    document
+        .getElementById("game-grid")
+        .style.display = "none";
+
+    document
+        .getElementById("player-container")
+        .style.display = "flex";
+
+    document
+        .getElementById("game-frame")
+        .src =
+        url;
 
 }
 
