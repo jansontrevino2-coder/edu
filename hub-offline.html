@@ -99,8 +99,11 @@ header{
 
 .game-card{
     background:var(--card);
+
     border-radius:16px;
+
     overflow:hidden;
+
     transition:.2s;
 }
 
@@ -162,6 +165,10 @@ header{
     );
 }
 
+.play-btn:hover{
+    filter:brightness(1.1);
+}
+
 #player-container{
     display:none;
     flex-direction:column;
@@ -192,6 +199,10 @@ header{
         var(--accent),
         var(--accent2)
     );
+}
+
+.player-btn:hover{
+    filter:brightness(1.1);
 }
 
 #game-frame{
@@ -328,7 +339,7 @@ async function loadGames(){
             }
 
             const vercelUrl =
-                `https://universaledu.vercel.app/${file.path}`;
+                `https://universaledu.vercel.app/${encodeURI(file.path)}`;
 
             if(
                 fileName
@@ -399,23 +410,21 @@ function renderGames(games){
             game.cover ||
             "https://via.placeholder.com/300?text=No+Cover";
 
-    card.innerHTML = `
-    ${cover}
+        card.innerHTML = `
+            ${cover}
 
-    <div class="game-info">
+            <div class="game-info">
 
-        <div class="game-title">
-            ${game.name}
-        </div>
+                <div class="game-title">
+                    ${game.name}
+                </div>
 
-        <button class="play-btn">
-            ▶ Play
-        </button>
+                <button class="play-btn">
+                    ▶ Play
+                </button>
 
-    </div>
-`;
-
-
+            </div>
+        `;
 
         card
         .querySelector(".play-btn")
@@ -431,90 +440,118 @@ function renderGames(games){
 }
 function playGame(url){
 
-    document
-        .getElementById("header")
-        .style.display = "none";
+    const header =
+        document.getElementById("header");
 
-    document
-        .getElementById("game-grid")
-        .style.display = "none";
+    const grid =
+        document.getElementById("game-grid");
 
-    document
-        .getElementById("player-container")
-        .style.display = "flex";
-
-    document
-        .getElementById("game-frame")
-        .src =
-        url;
-
-}
-
-function exitGame(){
-
-    document
-        .getElementById("game-frame")
-        .src = "";
-
-    document
-        .getElementById("player-container")
-        .style.display = "none";
-
-    document
-        .getElementById("header")
-        .style.display = "block";
-
-    document
-        .getElementById("game-grid")
-        .style.display = "grid";
-
-}
-
-function fullscreenGame(){
+    const player =
+        document.getElementById("player-container");
 
     const frame =
         document.getElementById("game-frame");
 
-    if(frame.requestFullscreen){
+    header.style.display = "none";
+    grid.style.display = "none";
+    player.style.display = "flex";
 
-        frame.requestFullscreen();
+    frame.src = url;
+
+    window.scrollTo(0, 0);
+}
+
+
+function exitGame(){
+
+    const header =
+        document.getElementById("header");
+
+    const grid =
+        document.getElementById("game-grid");
+
+    const player =
+        document.getElementById("player-container");
+
+    const frame =
+        document.getElementById("game-frame");
+
+    frame.src = "";
+
+    player.style.display = "none";
+    header.style.display = "block";
+    grid.style.display = "grid";
+
+    window.scrollTo(0, 0);
+}
+
+
+async function fullscreenGame(){
+
+    const frame =
+        document.getElementById("game-frame");
+
+    try{
+
+        if(frame.requestFullscreen){
+
+            await frame.requestFullscreen();
+
+        }
+        else if(frame.webkitRequestFullscreen){
+
+            frame.webkitRequestFullscreen();
+
+        }
 
     }
-    else if(frame.webkitRequestFullscreen){
+    catch(error){
 
-        frame.webkitRequestFullscreen();
+        console.error(
+            "Fullscreen failed:",
+            error
+        );
 
     }
 
 }
 
-document
-.getElementById("search")
-.addEventListener(
+
+const searchBox =
+    document.getElementById("search");
+
+searchBox.addEventListener(
     "input",
-    event => {
+    function(event){
 
         const query =
             event.target.value
+            .trim()
             .toLowerCase();
 
-        renderGames(
-
+        const filteredGames =
             allGames.filter(
                 game =>
                     game.name
                     .toLowerCase()
                     .includes(query)
-            )
+            );
 
+        renderGames(
+            filteredGames
         );
 
     }
 );
 
+
 window.addEventListener(
     "DOMContentLoaded",
-    loadGames
+    function(){
+
+        loadGames();
+
+    }
 );
 
 </script>
