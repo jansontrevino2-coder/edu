@@ -7,335 +7,1059 @@
 <title>UniversalGMS Offline</title>
 
 <style>
-:root{
-    --bg:#0f0f1a;
-    --card:#1f1f33;
-    --accent:#8b5cf6;
-    --accent2:#6d28d9;
-    --text:#ffffff;
-    --muted:#a1a1aa;
-    --border:rgba(255,255,255,.08);
+:root {
+    --bg: #08080e;
+    --bg-soft: #10101a;
+    --panel: rgba(18, 18, 31, 0.82);
+    --card: rgba(28, 28, 47, 0.82);
+    --card-hover: rgba(38, 33, 66, 0.96);
+
+    --accent: #8b5cf6;
+    --accent-light: #a78bfa;
+    --accent-dark: #6d28d9;
+
+    --text: #ffffff;
+    --muted: #9ca3af;
+    --border: rgba(255, 255, 255, 0.075);
+
+    --shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+    --accent-shadow: 0 12px 35px rgba(139, 92, 246, 0.28);
 }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-html{
-    background:var(--bg);
+html {
+    min-height: 100%;
+    background: var(--bg);
+    scroll-behavior: smooth;
 }
 
-body{
-    min-height:100vh;
-    padding:20px;
-    font-family:Arial,sans-serif;
-    color:var(--text);
+body {
+    min-height: 100vh;
+
+    color: var(--text);
+
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 
     background:
         radial-gradient(
-            circle at top,
-            rgba(139,92,246,.25),
-            transparent 40%
+            900px circle at 50% -200px,
+            rgba(139, 92, 246, 0.32),
+            transparent 65%
+        ),
+        radial-gradient(
+            700px circle at 0% 45%,
+            rgba(109, 40, 217, 0.08),
+            transparent 70%
+        ),
+        radial-gradient(
+            600px circle at 100% 70%,
+            rgba(139, 92, 246, 0.06),
+            transparent 70%
         ),
         var(--bg);
 }
 
-/* HEADER */
+/* ======================================================
+   HEADER
+====================================================== */
 
-header{
-    text-align:center;
-    margin-bottom:25px;
+header {
+    position: relative;
+
+    padding:
+        55px
+        20px
+        30px;
+
+    text-align: center;
 }
 
-.logo-icon{
-    display:block;
-    margin-bottom:8px;
-    font-size:4rem;
+.hero-glow {
+    position: absolute;
+
+    top: 40px;
+    left: 50%;
+
+    width: 360px;
+    height: 120px;
+
+    transform: translateX(-50%);
+
+    border-radius: 50%;
+
+    background:
+        rgba(139, 92, 246, 0.22);
+
+    filter: blur(75px);
+
+    pointer-events: none;
 }
 
-.logo{
-    margin-bottom:10px;
-    font-size:clamp(2.5rem,9vw,4rem);
-    font-weight:900;
-    line-height:1;
+.logo-row {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 13px;
+}
+
+.logo-icon {
+    display: inline-block;
+
+    font-size:
+        clamp(2.3rem, 8vw, 3.6rem);
+
+    line-height: 1;
+
+    filter:
+        drop-shadow(
+            0 0 22px
+            rgba(139, 92, 246, 0.4)
+        );
+}
+
+.logo {
+    font-size:
+        clamp(2.5rem, 9vw, 4.2rem);
+
+    font-weight: 900;
+    line-height: 1;
+
+    letter-spacing: -3px;
 
     background:
         linear-gradient(
             135deg,
-            #ffffff,
-            #c4b5fd,
-            #8b5cf6
+            #ffffff 8%,
+            #ddd6fe 40%,
+            #a78bfa 68%,
+            #7c3aed 100%
         );
 
-    -webkit-background-clip:text;
-    background-clip:text;
-    -webkit-text-fill-color:transparent;
-    color:transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+
+    filter:
+        drop-shadow(
+            0 0 25px
+            rgba(139, 92, 246, 0.15)
+        );
 }
 
-.subtitle{
-    margin-bottom:15px;
-    color:var(--muted);
-    font-size:1rem;
+.subtitle {
+    margin-top: 13px;
+
+    color: var(--muted);
+
+    font-size: 0.95rem;
+    line-height: 1.6;
 }
 
-#status{
-    margin-bottom:18px;
-    color:var(--muted);
-}
+.mode-badge {
+    display: inline-flex;
+    align-items: center;
 
-#search{
-    width:100%;
-    max-width:700px;
-    padding:14px 16px;
+    gap: 7px;
 
-    border:1px solid var(--border);
-    border-radius:14px;
-    outline:none;
+    margin-top: 13px;
+    padding: 7px 12px;
 
-    background:#1b1b2f;
-    color:white;
+    border:
+        1px solid
+        rgba(139, 92, 246, 0.23);
 
-    font-size:15px;
-}
+    border-radius: 999px;
 
-#search:focus{
-    border-color:var(--accent);
-    box-shadow:0 0 0 3px rgba(139,92,246,.18);
-}
+    color: #c4b5fd;
 
-#search::placeholder{
-    color:#9696a5;
-}
-
-/* GAME GRID */
-
-#game-grid{
-    display:grid;
-    grid-template-columns:
-        repeat(auto-fill,minmax(170px,1fr));
-
-    gap:16px;
-    width:100%;
-    max-width:1900px;
-    margin:auto;
-}
-
-.game-card{
-    display:flex;
-    flex-direction:column;
-    overflow:hidden;
-
-    min-width:0;
-
-    border:1px solid var(--border);
-    border-radius:16px;
-
-    background:var(--card);
-
-    transition:
-        transform .2s,
-        border-color .2s,
-        box-shadow .2s;
-}
-
-.game-card:hover{
-    transform:translateY(-5px);
-    border-color:rgba(139,92,246,.5);
-    box-shadow:0 12px 30px rgba(0,0,0,.25);
-}
-
-.cover-container{
-    position:relative;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    width:100%;
-    aspect-ratio:1 / 1;
-
-    overflow:hidden;
+    font-size: 12px;
+    font-weight: 700;
 
     background:
-        linear-gradient(
-            180deg,
-            rgba(139,92,246,.16),
-            rgba(15,15,26,.2)
-        );
+        rgba(139, 92, 246, 0.09);
+
+    backdrop-filter: blur(18px);
 }
 
-.game-cover{
-    display:block;
+.mode-dot {
+    width: 7px;
+    height: 7px;
 
-    width:100%;
-    height:100%;
+    border-radius: 50%;
 
-    padding:10px;
-
-    object-fit:contain;
-}
-
-.cover-fallback{
-    display:none;
-    align-items:center;
-    justify-content:center;
-
-    width:100%;
-    height:100%;
-
-    color:#c4b5fd;
-    font-size:3rem;
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(139,92,246,.16),
-            rgba(15,15,26,.2)
-        );
-}
-
-.game-info{
-    display:flex;
-    flex:1;
-    flex-direction:column;
-
-    padding:10px;
-}
-
-.game-title{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    min-height:38px;
-    margin-bottom:9px;
-
-    overflow-wrap:anywhere;
-
-    text-align:center;
-    font-size:14px;
-    font-weight:bold;
-}
-
-.play-btn{
-    width:100%;
-    margin-top:auto;
-    padding:9px;
-
-    border:none;
-    border-radius:10px;
-
-    cursor:pointer;
-
-    color:white;
-    font-size:13px;
-    font-weight:bold;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--accent),
-            var(--accent2)
-        );
-}
-
-.play-btn:hover{
-    filter:brightness(1.1);
-}
-
-.empty-message{
-    grid-column:1 / -1;
-
-    padding:40px;
-
-    color:var(--muted);
-    text-align:center;
-}
-
-/* PLAYER */
-
-#player-container{
-    display:none;
-    flex-direction:column;
-
-    gap:10px;
-    width:100%;
-    max-width:1800px;
-    margin:auto;
-}
-
-.player-bar{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-}
-
-.player-btn{
-    padding:12px 18px;
-
-    border:none;
-    border-radius:10px;
-
-    cursor:pointer;
-
-    color:white;
-    font-weight:bold;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--accent),
-            var(--accent2)
-        );
-}
-
-.player-btn:hover{
-    filter:brightness(1.1);
-}
-
-#game-frame{
-    width:100%;
-    height:88vh;
-
-    border:none;
-    border-radius:12px;
-
-    background:black;
+    background: #a78bfa;
 
     box-shadow:
-        0 0 35px rgba(139,92,246,.2);
+        0 0 10px
+        rgba(167, 139, 250, 0.8);
 }
 
-@media(max-width:600px){
-    body{
-        padding:14px;
+/* ======================================================
+   SEARCH
+====================================================== */
+
+.controls {
+    width: 100%;
+    max-width: 900px;
+
+    margin:
+        25px
+        auto
+        0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-container {
+    position: relative;
+
+    width: 100%;
+    max-width: 650px;
+}
+
+.search-icon {
+    position: absolute;
+
+    top: 50%;
+    left: 17px;
+
+    transform: translateY(-50%);
+
+    font-size: 16px;
+
+    opacity: 0.65;
+
+    pointer-events: none;
+}
+
+#search {
+    width: 100%;
+
+    padding:
+        15px
+        47px
+        15px
+        47px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 15px;
+
+    outline: none;
+
+    color: white;
+
+    font-size: 15px;
+
+    background:
+        rgba(20, 20, 34, 0.84);
+
+    box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.22);
+
+    backdrop-filter:
+        blur(22px);
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s,
+        transform 0.2s;
+}
+
+#search::-webkit-search-cancel-button {
+    cursor: pointer;
+
+    filter:
+        invert(1)
+        opacity(0.55);
+}
+
+#search::placeholder {
+    color: #77778c;
+}
+
+#search:focus {
+    transform: translateY(-1px);
+
+    border-color:
+        rgba(139, 92, 246, 0.7);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(139, 92, 246, 0.11),
+        0 15px 35px
+        rgba(0, 0, 0, 0.28);
+}
+
+/* ======================================================
+   LIBRARY HEADER
+====================================================== */
+
+.library-header {
+    width: 100%;
+    max-width: 1800px;
+
+    margin:
+        8px
+        auto
+        18px;
+
+    padding:
+        0 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+.library-title-section {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.library-icon {
+    width: 36px;
+    height: 36px;
+
+    display: grid;
+    place-items: center;
+
+    border:
+        1px solid
+        rgba(139, 92, 246, 0.2);
+
+    border-radius: 11px;
+
+    background:
+        rgba(139, 92, 246, 0.09);
+}
+
+.library-title {
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.library-description {
+    margin-top: 2px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+#status {
+    min-height: 35px;
+
+    display: inline-flex;
+    align-items: center;
+
+    padding:
+        7px
+        12px;
+
+    border:
+        1px solid
+        rgba(139, 92, 246, 0.18);
+
+    border-radius: 999px;
+
+    color: #c4b5fd;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    background:
+        rgba(139, 92, 246, 0.08);
+
+    white-space: nowrap;
+}
+
+/* ======================================================
+   LOADING
+====================================================== */
+
+.loading-ring {
+    width: 14px;
+    height: 14px;
+
+    margin-right: 7px;
+
+    display: inline-block;
+
+    border:
+        2px solid
+        rgba(196, 181, 253, 0.23);
+
+    border-top-color:
+        #c4b5fd;
+
+    border-radius: 50%;
+
+    animation:
+        spin
+        0.8s
+        linear
+        infinite;
+}
+
+/* ======================================================
+   GAME GRID
+====================================================== */
+
+#game-grid {
+    width: 100%;
+    max-width: 1800px;
+
+    margin: auto;
+
+    padding:
+        0
+        20px
+        55px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(190px, 1fr)
+        );
+
+    gap: 18px;
+}
+
+/* ======================================================
+   GAME CARDS
+====================================================== */
+
+.game-card {
+    position: relative;
+
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 19px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(31, 31, 51, 0.94),
+            rgba(17, 17, 29, 0.94)
+        );
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 0, 0, 0.18);
+
+    animation:
+        cardAppear
+        0.45s
+        ease
+        both;
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+}
+
+.game-card::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    z-index: 2;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(139, 92, 246, 0.09),
+            transparent 48%
+        );
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.25s;
+}
+
+.game-card:hover {
+    transform:
+        translateY(-7px)
+        scale(1.012);
+
+    border-color:
+        rgba(139, 92, 246, 0.42);
+
+    background:
+        var(--card-hover);
+
+    box-shadow:
+        0 22px 48px
+        rgba(0, 0, 0, 0.36),
+        0 0 30px
+        rgba(139, 92, 246, 0.07);
+}
+
+.game-card:hover::before {
+    opacity: 1;
+}
+
+/* ======================================================
+   COVER
+====================================================== */
+
+.cover-container {
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio: 1 / 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(139, 92, 246, 0.15),
+            rgba(11, 11, 19, 0.42)
+        );
+}
+
+.game-cover {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 15px;
+
+    object-fit: contain;
+
+    transition:
+        transform 0.3s ease,
+        filter 0.3s ease;
+}
+
+.game-card:hover .game-cover {
+    transform: scale(1.055);
+
+    filter:
+        brightness(1.08);
+}
+
+.cover-fallback {
+    width: 100%;
+    height: 100%;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    color: #c4b5fd;
+
+    font-size: 3rem;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(139, 92, 246, 0.16),
+            rgba(15, 15, 26, 0.22)
+        );
+}
+
+.cover-overlay {
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            transparent 56%,
+            rgba(8, 8, 14, 0.54)
+        );
+
+    pointer-events: none;
+}
+
+/* ======================================================
+   GAME INFO
+====================================================== */
+
+.game-info {
+    position: relative;
+    z-index: 3;
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    padding:
+        13px
+        13px
+        14px;
+}
+
+.game-title {
+    width: 100%;
+
+    margin-bottom: 11px;
+
+    overflow: hidden;
+
+    color: #f5f3ff;
+
+    text-align: center;
+
+    font-size: 14px;
+    font-weight: 750;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.play-btn {
+    width: 100%;
+
+    margin-top: auto;
+    padding: 10px 14px;
+
+    border: none;
+    border-radius: 11px;
+
+    cursor: pointer;
+
+    color: white;
+
+    font-size: 13px;
+    font-weight: 750;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            var(--accent-dark)
+        );
+
+    box-shadow:
+        0 8px 22px
+        rgba(109, 40, 217, 0.2);
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        filter 0.2s;
+}
+
+.play-btn:hover {
+    transform: translateY(-2px);
+
+    filter: brightness(1.1);
+
+    box-shadow:
+        var(--accent-shadow);
+}
+
+.play-btn:active {
+    transform:
+        translateY(0)
+        scale(0.98);
+}
+
+/* ======================================================
+   EMPTY AND ERROR STATES
+====================================================== */
+
+.empty-message {
+    grid-column:
+        1 / -1;
+
+    min-height: 330px;
+
+    padding: 70px 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    text-align: center;
+
+    color: var(--muted);
+}
+
+.empty-icon {
+    margin-bottom: 15px;
+
+    font-size: 48px;
+
+    opacity: 0.85;
+}
+
+.empty-title {
+    margin-bottom: 7px;
+
+    color: white;
+
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.empty-description {
+    max-width: 500px;
+
+    line-height: 1.6;
+
+    font-size: 14px;
+}
+
+/* ======================================================
+   PLAYER
+====================================================== */
+
+#player-container {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 500;
+
+    display: none;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+
+    background: #060609;
+}
+
+.player-bar {
+    min-height: 66px;
+
+    padding:
+        10px
+        14px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.07);
+
+    background:
+        rgba(14, 14, 24, 0.97);
+
+    box-shadow:
+        0 8px 30px
+        rgba(0, 0, 0, 0.2);
+
+    backdrop-filter:
+        blur(22px);
+}
+
+.player-brand {
+    margin-right: auto;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    font-size: 15px;
+    font-weight: 850;
+}
+
+.player-brand-name {
+    color:
+        var(--accent-light);
+}
+
+.player-game-name {
+    max-width: 340px;
+
+    overflow: hidden;
+
+    color: var(--muted);
+
+    font-size: 12px;
+    font-weight: 600;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.player-btn {
+    padding:
+        10px
+        15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    color: white;
+
+    font-size: 13px;
+    font-weight: 750;
+
+    background:
+        rgba(255, 255, 255, 0.055);
+
+    transition:
+        transform 0.2s,
+        border-color 0.2s,
+        background 0.2s;
+}
+
+.player-btn:hover {
+    transform: translateY(-1px);
+
+    border-color:
+        rgba(139, 92, 246, 0.42);
+
+    background:
+        rgba(139, 92, 246, 0.15);
+}
+
+.player-btn:active {
+    transform: scale(0.98);
+}
+
+#game-frame {
+    flex: 1;
+
+    width: 100%;
+    height: 100%;
+
+    border: none;
+
+    background: black;
+}
+
+/* ======================================================
+   SCROLLBAR
+====================================================== */
+
+::-webkit-scrollbar {
+    width: 9px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+
+    background: #292940;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3a3a59;
+}
+
+/* ======================================================
+   ANIMATIONS
+====================================================== */
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(13px);
     }
 
-    #game-grid{
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+/* ======================================================
+   TABLET
+====================================================== */
+
+@media (max-width: 760px) {
+    .library-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    #status {
+        align-self: flex-start;
+    }
+
+    .player-game-name {
+        display: none;
+    }
+}
+
+/* ======================================================
+   MOBILE
+====================================================== */
+
+@media (max-width: 600px) {
+    header {
+        padding:
+            38px
+            14px
+            25px;
+    }
+
+    .logo-row {
+        gap: 8px;
+    }
+
+    .logo {
+        font-size: 2.45rem;
+
+        letter-spacing: -2px;
+    }
+
+    .logo-icon {
+        font-size: 2.25rem;
+    }
+
+    .subtitle {
+        font-size: 0.85rem;
+    }
+
+    .controls {
+        margin-top: 20px;
+    }
+
+    .library-header {
+        margin-top: 4px;
+
+        padding:
+            0
+            12px;
+    }
+
+    #game-grid {
+        padding:
+            0
+            12px
+            35px;
+
         grid-template-columns:
-            repeat(2,minmax(0,1fr));
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
 
-        gap:12px;
+        gap: 11px;
     }
 
-    .game-info{
-        padding:9px;
+    .game-card {
+        border-radius: 15px;
     }
 
-    .game-title{
-        font-size:13px;
+    .game-cover {
+        padding: 10px;
     }
 
-    #game-frame{
-        height:82vh;
+    .game-info {
+        padding: 10px;
     }
 
-    .player-btn{
-        flex:1;
-        padding:11px;
+    .game-title {
+        margin-bottom: 8px;
+
+        font-size: 12px;
+    }
+
+    .play-btn {
+        padding: 9px;
+
+        font-size: 12px;
+    }
+
+    .player-brand {
+        display: none;
+    }
+
+    .player-bar {
+        justify-content: space-between;
+    }
+
+    .player-btn {
+        flex: 1;
+
+        padding:
+            10px
+            8px;
+    }
+}
+
+@media (max-width: 350px) {
+    #game-grid {
+        grid-template-columns:
+            1fr;
     }
 }
 </style>
@@ -345,46 +1069,125 @@ header{
 
 <header id="header">
 
-    <span class="logo-icon">🎮</span>
+    <div class="hero-glow"></div>
 
-    <div class="logo">
-        UniversalGMS
+    <div class="logo-row">
+
+        <span class="logo-icon">
+            🎮
+        </span>
+
+        <div class="logo">
+            UniversalGMS
+        </div>
+
     </div>
 
     <div class="subtitle">
-        UniversalGMS Downloadable
+        Your downloadable game library, all in one place.
     </div>
 
-    <div id="status">
-        Scanning GitLab...
+    <div class="mode-badge">
+
+        <span class="mode-dot"></span>
+
+        Downloadable Edition
+
     </div>
 
-    <input
-        id="search"
-        type="search"
-        placeholder="🔍 Search games..."
-        autocomplete="off"
-    >
+    <div class="controls">
+
+        <div class="search-container">
+
+            <span class="search-icon">
+                🔍
+            </span>
+
+            <input
+                id="search"
+                type="search"
+                placeholder="Search your library..."
+                autocomplete="off"
+            >
+
+        </div>
+
+    </div>
 
 </header>
 
+
+<section
+    class="library-header"
+    id="library-header"
+>
+
+    <div class="library-title-section">
+
+        <div class="library-icon">
+            🎲
+        </div>
+
+        <div>
+
+            <div class="library-title">
+                Game Library
+            </div>
+
+            <div class="library-description">
+                Games loaded directly from your repository
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="status">
+
+        <span class="loading-ring"></span>
+
+        Scanning GitLab...
+
+    </div>
+
+</section>
+
+
 <main id="game-grid"></main>
+
 
 <section id="player-container">
 
     <div class="player-bar">
 
+        <div class="player-brand">
+
+            <span>🎮</span>
+
+            <span class="player-brand-name">
+                UniversalGMS
+            </span>
+
+            <span
+                class="player-game-name"
+                id="player-game-name"
+            ></span>
+
+        </div>
+
         <button
             class="player-btn"
             id="exit-button"
-            type="button">
-            ⬅ Exit Game
+            type="button"
+        >
+            ← Exit Game
         </button>
 
         <button
             class="player-btn"
             id="fullscreen-button"
-            type="button">
+            type="button"
+        >
             ⛶ Fullscreen
         </button>
 
@@ -394,15 +1197,21 @@ header{
         id="game-frame"
         title="UniversalGMS Game Player"
         allow="fullscreen; autoplay; gamepad"
-        allowfullscreen>
-    </iframe>
+        allowfullscreen
+    ></iframe>
 
 </section>
 
+
 <script>
-const GITLAB_PROJECT_ID = "86390728";
-const GITLAB_BRANCH = "main";
-const GITLAB_FOLDER = "Games";
+const GITLAB_PROJECT_ID =
+    "86390728";
+
+const GITLAB_BRANCH =
+    "main";
+
+const GITLAB_FOLDER =
+    "Games";
 
 const VERCEL_BASE_URL =
     "https://universaledu.vercel.app";
@@ -410,40 +1219,75 @@ const VERCEL_BASE_URL =
 let allGames = [];
 
 
-function setStatus(text){
+/* ======================================================
+   STATUS
+====================================================== */
+
+function setStatus(
+    text,
+    loading = false
+) {
 
     const status =
-        document.getElementById("status");
+        document.getElementById(
+            "status"
+        );
 
-    if(status){
-        status.textContent = text;
+    if (!status) {
+        return;
+    }
+
+    if (loading) {
+
+        status.innerHTML =
+            '<span class="loading-ring"></span>' +
+            escapeHTML(text);
+
+    } else {
+
+        status.textContent =
+            text;
+
     }
 
 }
 
 
-function makeHostedUrl(filePath){
+/* ======================================================
+   HOSTED FILE URL
+====================================================== */
+
+function makeHostedUrl(filePath) {
 
     const encodedPath =
         filePath
             .split("/")
-            .map(part => encodeURIComponent(part))
+            .map(
+                part =>
+                    encodeURIComponent(part)
+            )
             .join("/");
 
-    return `${VERCEL_BASE_URL}/${encodedPath}`;
+    return (
+        `${VERCEL_BASE_URL}/${encodedPath}`
+    );
 
 }
 
 
-async function fetchRepositoryPage(page){
+/* ======================================================
+   GITLAB API
+====================================================== */
+
+async function fetchRepositoryPage(page) {
 
     const parameters =
         new URLSearchParams({
-            path:GITLAB_FOLDER,
-            ref:GITLAB_BRANCH,
-            recursive:"true",
-            per_page:"100",
-            page:String(page)
+            path: GITLAB_FOLDER,
+            ref: GITLAB_BRANCH,
+            recursive: "true",
+            per_page: "100",
+            page: String(page)
         });
 
     const apiUrl =
@@ -452,7 +1296,7 @@ async function fetchRepositoryPage(page){
     const response =
         await fetch(apiUrl);
 
-    if(!response.ok){
+    if (!response.ok) {
 
         throw new Error(
             `GitLab API error ${response.status}`
@@ -465,20 +1309,23 @@ async function fetchRepositoryPage(page){
 
     return {
         files,
+
         nextPage:
-            response.headers.get("x-next-page")
+            response.headers.get(
+                "x-next-page"
+            )
     };
 
 }
 
 
-async function fetchAllRepositoryFiles(){
+async function fetchAllRepositoryFiles() {
 
     const collectedFiles = [];
 
     let page = 1;
 
-    while(true){
+    while (true) {
 
         const result =
             await fetchRepositoryPage(page);
@@ -487,7 +1334,7 @@ async function fetchAllRepositoryFiles(){
             ...result.files
         );
 
-        if(!result.nextPage){
+        if (!result.nextPage) {
             break;
         }
 
@@ -501,12 +1348,17 @@ async function fetchAllRepositoryFiles(){
 }
 
 
-async function loadGames(){
+/* ======================================================
+   LOAD GAMES
+====================================================== */
 
-    try{
+async function loadGames() {
+
+    try {
 
         setStatus(
-            "Scanning GitLab games..."
+            "Scanning GitLab games...",
+            true
         );
 
         const files =
@@ -516,14 +1368,14 @@ async function loadGames(){
 
         files.forEach(file => {
 
-            if(file.type !== "blob"){
+            if (file.type !== "blob") {
                 return;
             }
 
             const parts =
                 file.path.split("/");
 
-            if(parts.length < 3){
+            if (parts.length < 3) {
                 return;
             }
 
@@ -531,37 +1383,45 @@ async function loadGames(){
                 parts[1];
 
             const fileName =
-                parts[parts.length - 1];
+                parts[
+                    parts.length - 1
+                ];
 
             const lowerFileName =
                 fileName.toLowerCase();
 
-            if(!games[folderName]){
+            if (!games[folderName]) {
 
                 games[folderName] = {
-                    name:folderName,
-                    url:null,
-                    cover:null
+                    name: folderName,
+                    url: null,
+                    cover: null
                 };
 
             }
 
             const hostedUrl =
-                makeHostedUrl(file.path);
+                makeHostedUrl(
+                    file.path
+                );
 
-            if(
-                lowerFileName.endsWith(".html")
-            ){
+            if (
+                lowerFileName.endsWith(
+                    ".html"
+                )
+            ) {
 
                 const expectedName =
                     `${folderName}.html`
-                    .toLowerCase();
+                        .toLowerCase();
 
-                if(
+                if (
                     !games[folderName].url ||
-                    lowerFileName === "index.html" ||
-                    lowerFileName === expectedName
-                ){
+                    lowerFileName ===
+                        "index.html" ||
+                    lowerFileName ===
+                        expectedName
+                ) {
 
                     games[folderName].url =
                         hostedUrl;
@@ -570,19 +1430,19 @@ async function loadGames(){
 
             }
 
-            if(
+            if (
                 /\.(png|jpg|jpeg|webp|gif)$/i
-                .test(fileName)
-            ){
+                    .test(fileName)
+            ) {
 
                 const isNamedCover =
                     /^cover\.(png|jpg|jpeg|webp|gif)$/i
-                    .test(fileName);
+                        .test(fileName);
 
-                if(
+                if (
                     isNamedCover ||
                     !games[folderName].cover
-                ){
+                ) {
 
                     games[folderName].cover =
                         hostedUrl;
@@ -594,23 +1454,31 @@ async function loadGames(){
         });
 
         allGames =
-            Object.values(games)
-                .filter(game => game.url)
+            Object
+                .values(games)
+                .filter(
+                    game =>
+                        Boolean(game.url)
+                )
                 .sort(
-                    (first,second) =>
+                    (first, second) =>
                         first.name.localeCompare(
                             second.name
                         )
                 );
 
-        setStatus(
-            `${allGames.length} Games Available`
+        updateGameCount(
+            allGames.length,
+            "game"
         );
 
-        renderGames(allGames);
+        renderGames(
+            allGames
+        );
 
     }
-    catch(error){
+
+    catch (error) {
 
         console.error(
             "UniversalGMS loading error:",
@@ -618,7 +1486,11 @@ async function loadGames(){
         );
 
         setStatus(
-            `Failed to load games: ${error.message}`
+            "Unable to load games"
+        );
+
+        renderError(
+            error.message
         );
 
     }
@@ -626,24 +1498,77 @@ async function loadGames(){
 }
 
 
-function createGameCard(game){
+/* ======================================================
+   GAME COUNT
+====================================================== */
+
+function updateGameCount(
+    amount,
+    type
+) {
+
+    if (type === "result") {
+
+        setStatus(
+            `${amount} ${
+                amount === 1
+                    ? "Result"
+                    : "Results"
+            }`
+        );
+
+        return;
+
+    }
+
+    setStatus(
+        `${amount} ${
+            amount === 1
+                ? "Game"
+                : "Games"
+        } Available`
+    );
+
+}
+
+
+/* ======================================================
+   CREATE GAME CARD
+====================================================== */
+
+function createGameCard(
+    game,
+    index
+) {
 
     const card =
-        document.createElement("article");
+        document.createElement(
+            "article"
+        );
 
     card.className =
         "game-card";
 
+    card.style.animationDelay =
+        `${Math.min(
+            index * 25,
+            250
+        )}ms`;
+
 
     const coverContainer =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     coverContainer.className =
         "cover-container";
 
 
     const fallback =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     fallback.className =
         "cover-fallback";
@@ -652,10 +1577,12 @@ function createGameCard(game){
         "🎮";
 
 
-    if(game.cover){
+    if (game.cover) {
 
         const image =
-            document.createElement("img");
+            document.createElement(
+                "img"
+            );
 
         image.className =
             "game-cover";
@@ -671,7 +1598,7 @@ function createGameCard(game){
 
         image.addEventListener(
             "error",
-            function(){
+            function () {
 
                 image.remove();
 
@@ -685,8 +1612,7 @@ function createGameCard(game){
             image
         );
 
-    }
-    else{
+    } else {
 
         fallback.style.display =
             "flex";
@@ -698,15 +1624,32 @@ function createGameCard(game){
     );
 
 
+    const overlay =
+        document.createElement(
+            "div"
+        );
+
+    overlay.className =
+        "cover-overlay";
+
+    coverContainer.appendChild(
+        overlay
+    );
+
+
     const gameInfo =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     gameInfo.className =
         "game-info";
 
 
     const gameTitle =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     gameTitle.className =
         "game-title";
@@ -714,9 +1657,14 @@ function createGameCard(game){
     gameTitle.textContent =
         game.name;
 
+    gameTitle.title =
+        game.name;
+
 
     const playButton =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
 
     playButton.className =
         "play-btn";
@@ -725,13 +1673,13 @@ function createGameCard(game){
         "button";
 
     playButton.textContent =
-        "▶ Play";
+        "▶ Play Game";
 
     playButton.addEventListener(
         "click",
-        function(){
+        function () {
 
-            playGame(game.url);
+            playGame(game);
 
         }
     );
@@ -758,23 +1706,42 @@ function createGameCard(game){
 }
 
 
-function renderGames(games){
+/* ======================================================
+   RENDER GAMES
+====================================================== */
+
+function renderGames(games) {
 
     const grid =
-        document.getElementById("game-grid");
+        document.getElementById(
+            "game-grid"
+        );
 
     grid.replaceChildren();
 
-    if(games.length === 0){
+    if (games.length === 0) {
 
         const emptyMessage =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         emptyMessage.className =
             "empty-message";
 
-        emptyMessage.textContent =
-            "No games found.";
+        emptyMessage.innerHTML = `
+            <div class="empty-icon">
+                🎮
+            </div>
+
+            <div class="empty-title">
+                No games found
+            </div>
+
+            <div class="empty-description">
+                Try searching for another game in your library.
+            </div>
+        `;
 
         grid.appendChild(
             emptyMessage
@@ -787,13 +1754,18 @@ function renderGames(games){
     const fragment =
         document.createDocumentFragment();
 
-    games.forEach(game => {
+    games.forEach(
+        (game, index) => {
 
-        fragment.appendChild(
-            createGameCard(game)
-        );
+            fragment.appendChild(
+                createGameCard(
+                    game,
+                    index
+                )
+            );
 
-    });
+        }
+    );
 
     grid.appendChild(
         fragment
@@ -802,21 +1774,92 @@ function renderGames(games){
 }
 
 
-function playGame(url){
+/* ======================================================
+   ERROR STATE
+====================================================== */
 
-    const header =
-        document.getElementById("header");
+function renderError(message) {
 
     const grid =
-        document.getElementById("game-grid");
+        document.getElementById(
+            "game-grid"
+        );
+
+    grid.replaceChildren();
+
+    const errorMessage =
+        document.createElement(
+            "div"
+        );
+
+    errorMessage.className =
+        "empty-message";
+
+    errorMessage.innerHTML = `
+        <div class="empty-icon">
+            ⚠️
+        </div>
+
+        <div class="empty-title">
+            Couldn't load the library
+        </div>
+
+        <div class="empty-description">
+            ${escapeHTML(message)}
+        </div>
+    `;
+
+    grid.appendChild(
+        errorMessage
+    );
+
+}
+
+
+/* ======================================================
+   GAME PLAYER
+====================================================== */
+
+function playGame(game) {
+
+    if (!game || !game.url) {
+        return;
+    }
+
+    const header =
+        document.getElementById(
+            "header"
+        );
+
+    const libraryHeader =
+        document.getElementById(
+            "library-header"
+        );
+
+    const grid =
+        document.getElementById(
+            "game-grid"
+        );
 
     const player =
-        document.getElementById("player-container");
+        document.getElementById(
+            "player-container"
+        );
 
     const frame =
-        document.getElementById("game-frame");
+        document.getElementById(
+            "game-frame"
+        );
+
+    const gameName =
+        document.getElementById(
+            "player-game-name"
+        );
 
     header.style.display =
+        "none";
+
+    libraryHeader.style.display =
         "none";
 
     grid.style.display =
@@ -825,33 +1868,60 @@ function playGame(url){
     player.style.display =
         "flex";
 
+    gameName.textContent =
+        `• ${game.name}`;
+
     frame.src =
-        url;
+        game.url;
+
+    document.body.style.overflow =
+        "hidden";
 
     window.scrollTo({
-        top:0,
-        behavior:"auto"
+        top: 0,
+        behavior: "auto"
     });
 
 }
 
 
-function exitGame(){
+function exitGame() {
 
     const header =
-        document.getElementById("header");
+        document.getElementById(
+            "header"
+        );
+
+    const libraryHeader =
+        document.getElementById(
+            "library-header"
+        );
 
     const grid =
-        document.getElementById("game-grid");
+        document.getElementById(
+            "game-grid"
+        );
 
     const player =
-        document.getElementById("player-container");
+        document.getElementById(
+            "player-container"
+        );
 
     const frame =
-        document.getElementById("game-frame");
+        document.getElementById(
+            "game-frame"
+        );
+
+    const gameName =
+        document.getElementById(
+            "player-game-name"
+        );
 
     frame.src =
         "about:blank";
+
+    gameName.textContent =
+        "";
 
     player.style.display =
         "none";
@@ -859,37 +1929,59 @@ function exitGame(){
     header.style.display =
         "block";
 
+    libraryHeader.style.display =
+        "flex";
+
     grid.style.display =
         "grid";
 
+    document.body.style.overflow =
+        "";
+
     window.scrollTo({
-        top:0,
-        behavior:"auto"
+        top: 0,
+        behavior: "auto"
     });
 
 }
 
 
-async function fullscreenGame(){
+/* ======================================================
+   FULLSCREEN
+====================================================== */
+
+async function fullscreenGame() {
 
     const frame =
-        document.getElementById("game-frame");
+        document.getElementById(
+            "game-frame"
+        );
 
-    try{
+    try {
 
-        if(frame.requestFullscreen){
+        if (document.fullscreenElement) {
+
+            await document.exitFullscreen();
+
+            return;
+
+        }
+
+        if (frame.requestFullscreen) {
 
             await frame.requestFullscreen();
 
-        }
-        else if(frame.webkitRequestFullscreen){
+        } else if (
+            frame.webkitRequestFullscreen
+        ) {
 
             frame.webkitRequestFullscreen();
 
         }
 
     }
-    catch(error){
+
+    catch (error) {
 
         console.error(
             "Fullscreen failed:",
@@ -901,8 +1993,88 @@ async function fullscreenGame(){
 }
 
 
+/* ======================================================
+   SEARCH
+====================================================== */
+
+function searchGames(event) {
+
+    const query =
+        event.target.value
+            .trim()
+            .toLowerCase();
+
+    const filteredGames =
+        allGames.filter(game =>
+
+            game.name
+                .toLowerCase()
+                .includes(query)
+
+        );
+
+    renderGames(
+        filteredGames
+    );
+
+    if (query) {
+
+        updateGameCount(
+            filteredGames.length,
+            "result"
+        );
+
+    } else {
+
+        updateGameCount(
+            allGames.length,
+            "game"
+        );
+
+    }
+
+}
+
+
+/* ======================================================
+   BASIC HTML SAFETY
+====================================================== */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
+}
+
+
+/* ======================================================
+   EVENTS
+====================================================== */
+
 document
-    .getElementById("exit-button")
+    .getElementById(
+        "exit-button"
+    )
     .addEventListener(
         "click",
         exitGame
@@ -910,7 +2082,9 @@ document
 
 
 document
-    .getElementById("fullscreen-button")
+    .getElementById(
+        "fullscreen-button"
+    )
     .addEventListener(
         "click",
         fullscreenGame
@@ -918,30 +2092,42 @@ document
 
 
 document
-    .getElementById("search")
+    .getElementById(
+        "search"
+    )
     .addEventListener(
         "input",
-        function(event){
+        searchGames
+    );
 
-            const query =
-                event.target.value
-                    .trim()
-                    .toLowerCase();
 
-            const filteredGames =
-                allGames.filter(
-                    game =>
-                        game.name
-                            .toLowerCase()
-                            .includes(query)
-                );
+document.addEventListener(
+    "keydown",
+    function (event) {
 
-            renderGames(
-                filteredGames
+        if (
+            event.key !== "Escape" ||
+            document.fullscreenElement
+        ) {
+            return;
+        }
+
+        const player =
+            document.getElementById(
+                "player-container"
             );
 
+        if (
+            player.style.display ===
+            "flex"
+        ) {
+
+            exitGame();
+
         }
-    );
+
+    }
+);
 
 
 window.addEventListener(
