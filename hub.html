@@ -3,250 +3,979 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>UniversalGMS</title>
 
 <style>
-:root{
-    --bg:#0f0f1a;
-    --card:#1f1f33;
-    --accent:#8b5cf6;
-    --accent2:#6d28d9;
-    --text:#ffffff;
-    --muted:#a1a1aa;
+:root {
+    --bg: #09090f;
+    --bg-soft: #0f0f19;
+    --card: rgba(25, 25, 42, 0.78);
+    --card-hover: rgba(35, 31, 61, 0.95);
+
+    --accent: #8b5cf6;
+    --accent-light: #a78bfa;
+    --accent-dark: #6d28d9;
+
+    --text: #ffffff;
+    --muted: #9ca3af;
+
+    --border: rgba(255,255,255,0.07);
+
+    --shadow:
+        0 15px 40px rgba(0,0,0,0.35);
+
+    --accent-shadow:
+        0 10px 30px rgba(139,92,246,0.25);
 }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-    min-height:100vh;
-    padding:20px;
-    font-family:Arial,sans-serif;
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    color: var(--text);
+
     background:
-        radial-gradient(circle at top,
-        rgba(139,92,246,.25),
-        transparent 40%),
+        radial-gradient(
+            900px circle at 50% -150px,
+            rgba(139,92,246,.25),
+            transparent 60%
+        ),
+        radial-gradient(
+            700px circle at 10% 40%,
+            rgba(109,40,217,.08),
+            transparent 70%
+        ),
         var(--bg);
-    color:var(--text);
 }
 
-/* HEADER */
+/* =========================================================
+   HEADER
+========================================================= */
 
-header{
-    text-align:center;
-    margin-bottom:25px;
+header {
+    position: relative;
+    padding:
+        55px
+        20px
+        32px;
+
+    text-align: center;
 }
 
-.logo{
-    font-size:3.5rem;
-    font-weight:900;
-    margin-bottom:10px;
+.hero-glow {
+    position: absolute;
+
+    width: 340px;
+    height: 120px;
+
+    left: 50%;
+    top: 25px;
+
+    transform: translateX(-50%);
+
+    background: rgba(139,92,246,.2);
+
+    filter: blur(80px);
+
+    pointer-events: none;
+}
+
+.logo {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+
+    margin-bottom: 8px;
+
+    font-size: clamp(2.3rem, 6vw, 4rem);
+
+    font-weight: 900;
+    letter-spacing: -3px;
 
     background:
-    linear-gradient(
-        135deg,
-        #fff,
-        #c4b5fd,
-        #8b5cf6
+        linear-gradient(
+            135deg,
+            #ffffff 10%,
+            #ddd6fe 45%,
+            #a78bfa 70%,
+            #7c3aed 100%
+        );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    filter: drop-shadow(
+        0 0 24px rgba(139,92,246,.18)
     );
-
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
 }
 
-.subtitle{
-    color:var(--muted);
-    margin-bottom:15px;
+.logo-icon {
+    -webkit-text-fill-color: initial;
+    font-size: .75em;
 }
 
-#status{
-    color:var(--muted);
-    margin-bottom:15px;
+.subtitle {
+    max-width: 550px;
+    margin: 0 auto;
+
+    color: var(--muted);
+
+    font-size: .95rem;
+    line-height: 1.6;
 }
 
-#search{
-    width:100%;
-    max-width:700px;
 
-    padding:14px;
+/* =========================================================
+   CONTROLS
+========================================================= */
 
-    border:none;
-    outline:none;
+.controls {
+    max-width: 900px;
 
-    border-radius:12px;
+    margin:
+        25px
+        auto
+        0;
 
-    background:#1b1b2f;
-    color:white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
 }
 
-/* GRID */
+.search-container {
+    position: relative;
 
-#game-grid{
-    max-width:1900px;
-    margin:auto;
+    flex: 1;
+    max-width: 620px;
+}
 
-    display:grid;
+.search-icon {
+    position: absolute;
+
+    left: 17px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    pointer-events: none;
+
+    font-size: 17px;
+
+    opacity: .6;
+}
+
+#search {
+    width: 100%;
+
+    padding:
+        15px
+        18px
+        15px
+        48px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 15px;
+
+    outline: none;
+
+    color: white;
+
+    font-size: 15px;
+
+    background:
+        rgba(20,20,34,.86);
+
+    backdrop-filter: blur(20px);
+
+    box-shadow:
+        0 8px 30px
+        rgba(0,0,0,.2);
+
+    transition:
+        border-color .2s,
+        box-shadow .2s,
+        transform .2s;
+}
+
+#search::placeholder {
+    color: #77778c;
+}
+
+#search:focus {
+    border-color:
+        rgba(139,92,246,.65);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(139,92,246,.10),
+        0 15px 35px
+        rgba(0,0,0,.25);
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   LIBRARY HEADER
+========================================================= */
+
+.library-header {
+    max-width: 1800px;
+
+    margin:
+        15px
+        auto
+        18px;
+
+    padding:
+        0 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+.library-title {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+#status {
+    display: inline-flex;
+
+    align-items: center;
+
+    min-height: 34px;
+
+    padding:
+        7px
+        12px;
+
+    border:
+        1px solid
+        rgba(139,92,246,.18);
+
+    border-radius: 999px;
+
+    color: #c4b5fd;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    background:
+        rgba(139,92,246,.08);
+}
+
+
+/* =========================================================
+   GAME GRID
+========================================================= */
+
+#game-grid {
+    max-width: 1800px;
+
+    margin: auto;
+
+    padding:
+        0 20px
+        50px;
+
+    display: grid;
 
     grid-template-columns:
-        repeat(auto-fill,minmax(180px,1fr));
+        repeat(
+            auto-fill,
+            minmax(190px, 1fr)
+        );
 
-    gap:16px;
+    gap: 18px;
 }
 
-.game-card{
-    background:var(--card);
 
-    border-radius:16px;
+/* =========================================================
+   GAME CARD
+========================================================= */
 
-    overflow:hidden;
+.game-card {
+    position: relative;
 
-    transition:.2s;
-}
+    overflow: hidden;
 
-.game-card:hover{
-    transform:translateY(-5px);
-}
+    border:
+        1px solid
+        var(--border);
 
-.game-cover{
-    width:100%;
-    aspect-ratio:1/1;
-
-    object-fit:contain;
-
-    padding:12px;
+    border-radius: 18px;
 
     background:
-    linear-gradient(
-        180deg,
-        rgba(139,92,246,.15),
-        transparent
-    );
+        linear-gradient(
+            145deg,
+            rgba(31,31,50,.92),
+            rgba(19,19,32,.92)
+        );
+
+    box-shadow:
+        0 8px 25px
+        rgba(0,0,0,.17);
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease,
+        background .25s ease;
+
+    animation:
+        cardAppear
+        .45s
+        ease
+        both;
 }
 
-.game-info{
-    padding:10px;
-}
+.game-card::before {
+    content: "";
 
-.game-title{
-    text-align:center;
-
-    font-size:14px;
-    font-weight:bold;
-
-    min-height:36px;
-
-    margin-bottom:8px;
-}
-
-.play-btn{
-    width:100%;
-
-    border:none;
-
-    padding:8px;
-
-    border-radius:10px;
-
-    cursor:pointer;
-
-    color:white;
-    font-weight:bold;
+    position: absolute;
+    inset: 0;
 
     background:
-    linear-gradient(
-        135deg,
-        var(--accent),
-        var(--accent2)
-    );
+        linear-gradient(
+            135deg,
+            rgba(139,92,246,.08),
+            transparent 45%
+        );
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    transition:
+        opacity .25s;
 }
 
-/* PLAYER */
+.game-card:hover {
+    transform:
+        translateY(-7px)
+        scale(1.015);
 
-#player-container{
-    display:none;
-    flex-direction:column;
-    gap:10px;
-}
-
-.player-bar{
-    display:flex;
-    gap:10px;
-}
-
-.player-btn{
-    border:none;
-
-    padding:12px 18px;
-
-    border-radius:10px;
-
-    cursor:pointer;
-
-    color:white;
-    font-weight:bold;
+    border-color:
+        rgba(139,92,246,.38);
 
     background:
-    linear-gradient(
-        135deg,
-        var(--accent),
-        var(--accent2)
-    );
+        var(--card-hover);
+
+    box-shadow:
+        0 20px 45px
+        rgba(0,0,0,.35),
+        0 0 25px
+        rgba(139,92,246,.06);
 }
 
-#game-frame{
-    width:100%;
-    height:88vh;
-
-    border:none;
-
-    border-radius:12px;
-
-    background:black;
+.game-card:hover::before {
+    opacity: 1;
 }
+
+
+/* =========================================================
+   COVER
+========================================================= */
+
+.cover-container {
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio:
+        1 / 1;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(139,92,246,.14),
+            rgba(11,11,19,.4)
+        );
+}
+
+.game-cover {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    padding: 16px;
+
+    transition:
+        transform .3s ease,
+        filter .3s ease;
+}
+
+.game-card:hover .game-cover {
+    transform:
+        scale(1.055);
+
+    filter:
+        brightness(1.08);
+}
+
+.cover-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            transparent 55%,
+            rgba(9,9,15,.55)
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   GAME INFO
+========================================================= */
+
+.game-info {
+    position: relative;
+
+    padding:
+        13px
+        13px
+        14px;
+}
+
+.game-title {
+    width: 100%;
+
+    margin-bottom: 11px;
+
+    overflow: hidden;
+
+    color: #f5f3ff;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    text-align: center;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.play-btn {
+    position: relative;
+
+    width: 100%;
+
+    overflow: hidden;
+
+    border: none;
+
+    padding:
+        10px
+        15px;
+
+    border-radius: 11px;
+
+    cursor: pointer;
+
+    color: white;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            var(--accent-dark)
+        );
+
+    box-shadow:
+        0 7px 20px
+        rgba(109,40,217,.18);
+
+    transition:
+        transform .2s,
+        box-shadow .2s,
+        filter .2s;
+}
+
+.play-btn:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        var(--accent-shadow);
+
+    filter:
+        brightness(1.1);
+}
+
+.play-btn:active {
+    transform:
+        translateY(0)
+        scale(.98);
+}
+
+
+/* =========================================================
+   EMPTY SEARCH
+========================================================= */
+
+.empty-state {
+    grid-column:
+        1 / -1;
+
+    padding:
+        90px 20px;
+
+    text-align: center;
+
+    color:
+        var(--muted);
+}
+
+.empty-icon {
+    font-size: 45px;
+
+    margin-bottom: 15px;
+
+    opacity: .8;
+}
+
+.empty-title {
+    margin-bottom: 6px;
+
+    color: white;
+
+    font-size: 20px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+#player-container {
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 500;
+
+    flex-direction: column;
+
+    background:
+        #07070b;
+}
+
+.player-bar {
+    min-height: 64px;
+
+    padding:
+        10px
+        14px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.07);
+
+    background:
+        rgba(15,15,25,.97);
+
+    backdrop-filter:
+        blur(20px);
+}
+
+.player-brand {
+    margin-right: auto;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.player-brand span {
+    color:
+        var(--accent-light);
+}
+
+.player-btn {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    padding:
+        10px
+        15px;
+
+    border-radius:
+        10px;
+
+    cursor: pointer;
+
+    color: white;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    background:
+        rgba(255,255,255,.06);
+
+    transition:
+        background .2s,
+        transform .2s,
+        border-color .2s;
+}
+
+.player-btn:hover {
+    transform:
+        translateY(-1px);
+
+    border-color:
+        rgba(139,92,246,.4);
+
+    background:
+        rgba(139,92,246,.15);
+}
+
+#game-frame {
+    flex: 1;
+
+    width: 100%;
+
+    border: none;
+
+    background: black;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading-ring {
+    width: 14px;
+    height: 14px;
+
+    margin-right: 7px;
+
+    display: inline-block;
+
+    vertical-align: -2px;
+
+    border:
+        2px solid
+        rgba(196,181,253,.25);
+
+    border-top-color:
+        #c4b5fd;
+
+    border-radius:
+        50%;
+
+    animation:
+        spin .8s
+        linear
+        infinite;
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes spin {
+    to {
+        transform:
+            rotate(360deg);
+    }
+}
+
+@keyframes cardAppear {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+    width: 9px;
+}
+
+::-webkit-scrollbar-track {
+    background:
+        #09090f;
+}
+
+::-webkit-scrollbar-thumb {
+    background:
+        #292940;
+
+    border-radius:
+        10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background:
+        #393958;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    header {
+        padding:
+            38px
+            14px
+            25px;
+    }
+
+    .logo {
+        font-size:
+            2.5rem;
+
+        letter-spacing:
+            -2px;
+    }
+
+    .subtitle {
+        font-size:
+            .85rem;
+    }
+
+    .controls {
+        margin-top:
+            20px;
+    }
+
+    .library-header {
+        padding:
+            0
+            12px;
+
+        margin-top:
+            8px;
+    }
+
+    #game-grid {
+        padding:
+            0
+            12px
+            30px;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 11px;
+    }
+
+    .game-card {
+        border-radius:
+            14px;
+    }
+
+    .game-cover {
+        padding:
+            10px;
+    }
+
+    .game-info {
+        padding:
+            10px;
+    }
+
+    .game-title {
+        margin-bottom:
+            8px;
+
+        font-size:
+            12px;
+    }
+
+    .play-btn {
+        padding:
+            9px;
+
+        font-size:
+            12px;
+    }
+
+    .player-brand {
+        display:
+            none;
+    }
+
+    .player-bar {
+        justify-content:
+            space-between;
+    }
+
+    .player-btn {
+        flex: 1;
+
+        justify-content:
+            center;
+    }
+}
+
 </style>
 </head>
+
 <body>
 
 <header id="header">
 
+    <div class="hero-glow"></div>
+
     <div class="logo">
-        🎮 UniversalGMS
+        <span class="logo-icon">🎮</span>
+        UniversalGMS
     </div>
 
     <div class="subtitle">
-        
+        Your game library, all in one place.
     </div>
 
-    <div id="status">
-        Loading games...
-    </div>
+    <div class="controls">
 
-    <input
-        id="search"
-        type="text"
-        placeholder="🔍 Search games..."
-    >
+        <div class="search-container">
+
+            <span class="search-icon">
+                🔍
+            </span>
+
+            <input
+                id="search"
+                type="text"
+                placeholder="Search your library..."
+                autocomplete="off"
+            >
+
+        </div>
+
+    </div>
 
 </header>
 
-<div id="game-grid"></div>
+
+<div
+    class="library-header"
+    id="library-header"
+>
+
+    <div class="library-title">
+        Game Library
+    </div>
+
+    <div id="status">
+        <span class="loading-ring"></span>
+        Loading games...
+    </div>
+
+</div>
+
+
+<main id="game-grid"></main>
+
 
 <div id="player-container">
 
     <div class="player-bar">
 
+        <div class="player-brand">
+            🎮
+            <span>UniversalGMS</span>
+        </div>
+
         <button
             class="player-btn"
-            onclick="exitGame()">
-            ⬅ Exit Game
+            onclick="exitGame()"
+        >
+            ← Exit Game
         </button>
 
         <button
             class="player-btn"
-            onclick="fullscreenGame()">
+            onclick="fullscreenGame()"
+        >
             ⛶ Fullscreen
         </button>
 
@@ -254,164 +983,538 @@ header{
 
     <iframe
         id="game-frame"
-        allowfullscreen>
-    </iframe>
+        allowfullscreen
+    ></iframe>
 
 </div>
+
 
 <script>
 
 let allGames = [];
 
-function setStatus(text){
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function setStatus(text, loading = false) {
+
     const status =
         document.getElementById("status");
 
-    if(status){
-        status.textContent = text;
+    if (!status) {
+        return;
+    }
+
+    if (loading) {
+
+        status.innerHTML =
+            '<span class="loading-ring"></span>' +
+            text;
+
+    } else {
+
+        status.textContent =
+            text;
+
     }
 }
 
-async function loadGames(){
 
-    try{
+/* =========================================================
+   LOAD GAMES
+========================================================= */
 
-        setStatus("Connecting...");
+async function loadGames() {
+
+    try {
+
+        setStatus(
+            "Connecting...",
+            true
+        );
 
         const response =
             await fetch("/api/games");
 
-        if(!response.ok){
+        if (!response.ok) {
+
             throw new Error(
                 "API Error " +
                 response.status
             );
+
         }
 
         const games =
             await response.json();
 
-        allGames = games;
+        allGames =
+            Array.isArray(games)
+                ? games
+                : [];
 
         setStatus(
-            `${games.length} Games Available`
+            `${allGames.length} ${
+                allGames.length === 1
+                    ? "Game"
+                    : "Games"
+            }`
         );
 
-        renderGames(games);
+        renderGames(
+            allGames
+        );
 
     }
-    catch(error){
 
-        console.error(error);
+    catch (error) {
+
+        console.error(
+            error
+        );
 
         setStatus(
-            "Error: " +
+            "Unable to load games"
+        );
+
+        renderError(
             error.message
         );
+
     }
 }
 
-function renderGames(games){
+
+/* =========================================================
+   RENDER GAMES
+========================================================= */
+
+function renderGames(games) {
 
     const grid =
-        document.getElementById("game-grid");
+        document.getElementById(
+            "game-grid"
+        );
 
-    grid.innerHTML = "";
+    grid.innerHTML =
+        "";
 
-    games.forEach(game=>{
+    if (!games.length) {
 
-        const card =
-            document.createElement("div");
+        grid.innerHTML = `
+            <div class="empty-state">
 
-        card.className =
-            "game-card";
-
-        card.innerHTML = `
-            <img
-                class="game-cover"
-                src="${game.cover}"
-                alt="${game.name}"
-            >
-
-            <div class="game-info">
-
-                <div class="game-title">
-                    ${game.name}
+                <div class="empty-icon">
+                    🎮
                 </div>
 
-                <button class="play-btn">
-                    ▶ Play
-                </button>
+                <div class="empty-title">
+                    No games found
+                </div>
+
+                <div>
+                    Try searching for another game.
+                </div>
 
             </div>
         `;
 
-        card.querySelector(".play-btn")
-        .addEventListener(
-            "click",
-            () => playGame(game.url)
+        return;
+    }
+
+    games.forEach(
+        (game, index) => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "game-card";
+
+            card.style.animationDelay =
+                `${Math.min(index * 25, 250)}ms`;
+
+            const safeName =
+                game.name ||
+                "Untitled Game";
+
+            card.innerHTML = `
+
+                <div class="cover-container">
+
+                    <img
+                        class="game-cover"
+                        alt=""
+                    >
+
+                    <div
+                        class="cover-overlay"
+                    ></div>
+
+                </div>
+
+                <div class="game-info">
+
+                    <div
+                        class="game-title"
+                        title="${escapeAttribute(
+                            safeName
+                        )}"
+                    >
+                        ${escapeHTML(
+                            safeName
+                        )}
+                    </div>
+
+                    <button
+                        class="play-btn"
+                    >
+                        ▶ Play Game
+                    </button>
+
+                </div>
+            `;
+
+            const image =
+                card.querySelector(
+                    ".game-cover"
+                );
+
+            image.src =
+                game.cover || "";
+
+            image.alt =
+                safeName;
+
+            image.addEventListener(
+                "error",
+                () => {
+
+                    image.style.opacity =
+                        ".25";
+
+                }
+            );
+
+            card
+                .querySelector(
+                    ".play-btn"
+                )
+                .addEventListener(
+                    "click",
+                    () => {
+
+                        playGame(
+                            game.url
+                        );
+
+                    }
+                );
+
+            grid.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+function renderError(message) {
+
+    const grid =
+        document.getElementById(
+            "game-grid"
         );
 
-        grid.appendChild(card);
+    grid.innerHTML = `
 
-    });
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                ⚠️
+            </div>
+
+            <div class="empty-title">
+                Couldn't load the library
+            </div>
+
+            <div>
+                ${escapeHTML(message)}
+            </div>
+
+        </div>
+    `;
+
 }
 
-function playGame(url){
 
-    document.getElementById("header").style.display =
+/* =========================================================
+   GAME PLAYER
+========================================================= */
+
+function playGame(url) {
+
+    if (!url) {
+        return;
+    }
+
+    document
+        .getElementById("header")
+        .style.display =
         "none";
 
-    document.getElementById("game-grid").style.display =
+    document
+        .getElementById(
+            "library-header"
+        )
+        .style.display =
         "none";
 
-    document.getElementById("player-container").style.display =
+    document
+        .getElementById(
+            "game-grid"
+        )
+        .style.display =
+        "none";
+
+    document
+        .getElementById(
+            "player-container"
+        )
+        .style.display =
         "flex";
 
-    document.getElementById("game-frame").src =
+    document
+        .getElementById(
+            "game-frame"
+        )
+        .src =
         url;
+
+    document.body.style.overflow =
+        "hidden";
+
 }
 
-function exitGame(){
 
-    document.getElementById("game-frame").src =
+function exitGame() {
+
+    document
+        .getElementById(
+            "game-frame"
+        )
+        .src =
         "";
 
-    document.getElementById("player-container").style.display =
+    document
+        .getElementById(
+            "player-container"
+        )
+        .style.display =
         "none";
 
-    document.getElementById("header").style.display =
+    document
+        .getElementById("header")
+        .style.display =
         "block";
 
-    document.getElementById("game-grid").style.display =
+    document
+        .getElementById(
+            "library-header"
+        )
+        .style.display =
+        "flex";
+
+    document
+        .getElementById(
+            "game-grid"
+        )
+        .style.display =
         "grid";
+
+    document.body.style.overflow =
+        "";
+
 }
 
-function fullscreenGame(){
+
+/* =========================================================
+   FULLSCREEN
+========================================================= */
+
+function fullscreenGame() {
 
     const frame =
-        document.getElementById("game-frame");
+        document.getElementById(
+            "game-frame"
+        );
 
-    if(frame.requestFullscreen){
-        frame.requestFullscreen();
+    if (
+        document.fullscreenElement
+    ) {
+
+        document
+            .exitFullscreen?.();
+
+        return;
+
     }
+
+    frame
+        .requestFullscreen?.();
+
 }
 
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
 document
-.getElementById("search")
-.addEventListener("input", event => {
+    .getElementById("search")
+    .addEventListener(
+        "input",
+        event => {
 
-    const query =
-        event.target.value.toLowerCase();
+            const query =
+                event.target
+                    .value
+                    .trim()
+                    .toLowerCase();
 
-    renderGames(
-        allGames.filter(game =>
-            game.name
-            .toLowerCase()
-            .includes(query)
-        )
+            const filtered =
+                allGames.filter(
+                    game => {
+
+                        return (
+                            game.name ||
+                            ""
+                        )
+                            .toLowerCase()
+                            .includes(
+                                query
+                            );
+
+                    }
+                );
+
+            renderGames(
+                filtered
+            );
+
+            if (query) {
+
+                setStatus(
+                    `${filtered.length} ${
+                        filtered.length === 1
+                            ? "Result"
+                            : "Results"
+                    }`
+                );
+
+            } else {
+
+                setStatus(
+                    `${allGames.length} ${
+                        allGames.length === 1
+                            ? "Game"
+                            : "Games"
+                    }`
+                );
+
+            }
+
+        }
     );
-});
+
+
+/* =========================================================
+   ESC TO EXIT GAME
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key ===
+            "Escape"
+        ) {
+
+            const player =
+                document.getElementById(
+                    "player-container"
+                );
+
+            if (
+                player.style.display ===
+                "flex" &&
+                !document.fullscreenElement
+            ) {
+
+                exitGame();
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   BASIC HTML SAFETY
+========================================================= */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
+}
+
+
+function escapeAttribute(value) {
+
+    return escapeHTML(
+        value
+    );
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
 
 window.addEventListener(
     "DOMContentLoaded",
